@@ -1,17 +1,29 @@
 import PySimpleGUI as sg
+
 layout = [
-    [sg.Text('File 1'), sg.InputText(), sg.FileBrowse(),
-     sg.Checkbox('MD5'), sg.Checkbox('SHA1')
-     ],
-    [sg.Text('File 2'), sg.InputText(), sg.FileBrowse(),
-     sg.Checkbox('SHA256')
-     ],
+    [
+        sg.Text("Température"),
+        sg.InputText(),
+    ],
+    [sg.Text("CO2"), sg.InputText()],
+    [sg.Text("Humidité"), sg.InputText()],
     [sg.Output(size=(90, 20))],
-    [sg.Submit(), sg.Cancel()]
+    [sg.Button("Soumettre"), sg.Cancel()],
 ]
-window = sg.Window('File Compare', layout)
-while True:                             # The Event Loop
+
+
+def isNumber(caracter):
+    try:
+        n = int(caracter)
+        return True
+    except ValueError:
+        return False
+
+
+window = sg.Window("Contrôle de la serre", layout)
+while True:  # The Event Loop
     event, values = window.read()
-    # print(event, values) #debug
-    if event in (None, 'Exit', 'Cancel'):
+    if event in (None, "Exit", "Cancel"):
         break
+    elif event == "Soumettre" and isNumber(values[0]) == True:
+        print(values)
