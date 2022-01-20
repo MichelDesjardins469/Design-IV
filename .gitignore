@@ -130,3 +130,6 @@ dmypy.json
 
 #tags
 tags
+
+#vim swp
+*.swp
