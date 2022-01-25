@@ -1,6 +1,7 @@
 import PySimpleGUI as sg
 import control
 
+sg.theme("DarkTeal12")
 layout = [
     [
         sg.Text("Température (°C)"),
@@ -38,20 +39,14 @@ layout = [
     [sg.Output(size=(80, 20))],
     [sg.Button("Soumettre"), sg.Cancel()],
 ]
-
-
-def allNumValues(caracters):
-    for i in range(len(caracters)):
-        try:
-            n = int(caracters[i])
-        except ValueError:
-            return False
-    return True
-
-
+co2value = 0
 window = sg.Window("Contrôle de la serre", layout, element_justification="c")
 while True:  # The Event Loop
-    event, values = window.read()
+    event, values = window.read(timeout=200)
+    co2value += 1
+    if co2value > 20:
+        sg.popup("CO2 levels too high. Please take action", button_color="red")
+        co2value = 0
     if event in (None, "Exit", "Cancel"):
         break
     elif event == "Modifier la température":
