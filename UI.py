@@ -3,6 +3,7 @@ import control
 
 sg.theme("DarkTeal12")
 layout = [
+    [sg.Text("Contrôle des paramètres")],
     [
         sg.Text("Température (°C)"),
         sg.Slider(
@@ -15,7 +16,7 @@ layout = [
         sg.Button("Modifier la température"),
     ],
     [
-        sg.Text("CO2 (%)"),
+        sg.Text("CO2 (ppm)"),
         sg.Slider(
             range=(0, 35),
             default_value=20,
@@ -36,16 +37,17 @@ layout = [
         ),
         sg.Button("Modifier l'humidité"),
     ],
-    [sg.Output(size=(80, 20))],
+    [sg.Button("Calibrer les instruments")],
+    [sg.Output(size=(80, 5))],
     [sg.Button("Soumettre"), sg.Cancel()],
 ]
 co2value = 0
 window = sg.Window("Contrôle de la serre", layout, element_justification="c")
 while True:  # The Event Loop
-    event, values = window.read(timeout=200)
+    event, values = window.read(timeout=500)
     co2value += 1
     if co2value > 20:
-        sg.popup("CO2 levels too high. Please take action", button_color="red")
+        sg.popup("Niveau de CO2 trop élevé. Veuillez intervenir", button_color="red")
         co2value = 0
     if event in (None, "Exit", "Cancel"):
         break
