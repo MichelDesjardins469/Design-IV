@@ -37,43 +37,9 @@ frame_inputs_layout = [
         slider2button('Humidité (%)', 'HumidSub', 'SliderHumid', 'HumidAdd', 0, 100, 80)
 ]
 frame_light_layout = [
+        slider2button("Nombre d'heures d'éclairage par jour", 'AllumageSubLum', 'SliderAllumageLum', 'AllumageAddLum', 0, 24, 8),
     [
-        sg.Text("Nombre d'heures de luminosité par jour : "),
-        sg.Slider(
-            key="SliderHeure",
-            range=(0, 24),
-            default_value=8,
-            size=(20, 15),
-            orientation="horizontal",
-            font=("Helvetica", 12),
-        ),
-    ],
-    [
-        sg.Text("Heure d'allumage"),
-        sg.Button(
-            "",
-            key="AllumageSubLum",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./minus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
-        sg.Slider(
-            key="SliderAllumageLum",
-            range=(0, 24),
-            default_value=8,
-            size=(20, 15),
-            orientation="horizontal",
-            font=("Helvetica", 12),
-        ),
-        sg.Button(
-            "",
-            key="AllumageAddLum",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./plus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
+        sg.Text("Heure d'allumage"),sg.Combo(['Minuit', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 'Midi', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'], default_value=8), sg.Combo(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59'], default_value=0)
     ],
 ]
 layout = [
