@@ -87,12 +87,12 @@ layout = [
             image_subsample=2,
         ),
     ],
-    [sg.Button("Calibrer les instruments")],
+    [sg.Button("")],
     [sg.Output(size=(80, 5))],
     [sg.Button("Soumettre"), sg.Cancel()],
 ]
 co2value = 0
-window = sg.Window("Contrôle de la serre", layout, element_justification="c")
+window = sg.Window("Contrôle de la serre", layout, element_justification="c", size=(1050, 730))
 while True:  # The Event Loop
     event, values = window.read(timeout=500)
     co2value += 1
@@ -102,23 +102,23 @@ while True:  # The Event Loop
     if event in (None, "Exit", "Cancel"):
         break
     elif event == "TempSub":
-        newValue = values['SliderTemp']-1
+        newValue = values["SliderTemp"] - 1
         window["SliderTemp"].update(newValue)
     elif event == "TempAdd":
-        newValue = values['SliderTemp']+1
+        newValue = values["SliderTemp"] + 1
         window["SliderTemp"].update(newValue)
-        
+
     elif event == "CO2Sub":
-        newValue = values['SliderCO2']-1
+        newValue = values["SliderCO2"] - 1
         window["SliderCO2"].update(newValue)
     elif event == "CO2Add":
-        newValue = values['SliderCO2']+1
+        newValue = values["SliderCO2"] + 1
         window["SliderCO2"].update(newValue)
     elif event == "HumidSub":
-        newValue = values['SliderHumid']-1
+        newValue = values["SliderHumid"] - 1
         window["SliderHumid"].update(newValue)
     elif event == "HumidAdd":
-        newValue = values['SliderHumid']+1
+        newValue = values["SliderHumid"] + 1
         window["SliderHumid"].update(newValue)
     elif event == "Soumettre" and allNumValues(values) == True:
         print(values)
