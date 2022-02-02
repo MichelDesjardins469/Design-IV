@@ -4,91 +4,41 @@ import control
 # option pour choisir le type de plante
 # Ajouter une option rajouter de la lumiere instant si exemple is annonce gris
 sg.theme("DarkTeal12")
-layout = [
-    [sg.Text("Contrôle des paramètres")],
-    [
-        sg.Text("Température (°C)"),
+def slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
+    return [sg.Text(text),
         sg.Button(
+
             "",
-            key="TempSub",
+            key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="./minus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
         sg.Slider(
-            key="SliderTemp",
-            range=(0, 35),
-            default_value=20,
+            key=keySlider,
+            range=(minValue, maxValue),
+            default_value=defaultValue,
             size=(20, 15),
             orientation="horizontal",
             font=("Helvetica", 12),
         ),
         sg.Button(
             "",
-            key="TempAdd",
+            key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="./plus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
-        ),
-    ],
+        )]
+frame_inputs_layout = [
+        slider2button('Température (°C)', 'TempSub','SliderTemp', 'TempAdd', 0, 35, 20),
+        slider2button('CO2 (ppm)', 'CO2Sub', 'SliderCO2', 'CO2Add', 4000, 8000, 4000),
+        slider2button('Humidité (%)', 'HumidSub', 'SliderHumid', 'HumidAdd', 0, 100, 80)
+]
+frame_light_layout = [
     [
-        sg.Text("CO2 (ppm)"),
-        sg.Button(
-            "",
-            key="CO2Sub",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./minus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
-        sg.Slider(
-            key="SliderCO2",
-            range=(0, 35),
-            default_value=20,
-            size=(20, 15),
-            orientation="horizontal",
-            font=("Helvetica", 12),
-        ),
-        sg.Button(
-            "",
-            key="CO2Add",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./plus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
-    ],
-    [
-        sg.Text("Humidité (%)"),
-        sg.Button(
-            "",
-            key="HumidSub",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./minus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
-        sg.Slider(
-            key="SliderHumid",
-            range=(0, 35),
-            default_value=20,
-            size=(20, 15),
-            orientation="horizontal",
-            font=("Helvetica", 12),
-        ),
-        sg.Button(
-            "",
-            key="HumidAdd",
-            button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./plus_sign.png",
-            image_size=(25, 25),
-            image_subsample=2,
-        ),
-    ],
-    [
-        sg.Text("Nombre d'heures de lumiere par jour : "),
+        sg.Text("Nombre d'heures de luminosité par jour : "),
         sg.Slider(
             key="SliderHeure",
             range=(0, 24),
@@ -99,7 +49,7 @@ layout = [
         ),
     ],
     [
-        sg.Text("Heure d'allumage "),
+        sg.Text("Heure d'allumage"),
         sg.Button(
             "",
             key="AllumageSubLum",
@@ -110,8 +60,8 @@ layout = [
         ),
         sg.Slider(
             key="SliderAllumageLum",
-            range=(0, 35),
-            default_value=20,
+            range=(0, 24),
+            default_value=8,
             size=(20, 15),
             orientation="horizontal",
             font=("Helvetica", 12),
@@ -124,7 +74,26 @@ layout = [
             image_size=(25, 25),
             image_subsample=2,
         ),
-    ][sg.Output(size=(80, 5))],
+    ],
+]
+layout = [
+    [
+        sg.Frame(
+            "Variables contrôlables",
+            frame_inputs_layout,
+            font="Any 12",
+            title_color="white",
+        )
+    ],
+    [
+        sg.Frame(
+            "Contrôle de la lumière",
+            frame_light_layout,
+            font="Any 12",
+            title_color="white",
+        )
+    ],
+    [sg.Output(size=(80, 5))],
     [sg.Button("Soumettre"), sg.Cancel()],
 ]
 co2value = 0
@@ -132,7 +101,9 @@ window = sg.Window(
     "Contrôle de la serre", layout, element_justification="c", size=(1050, 730)
 )
 while True:  # The Event Loop
-    event, values = window.read(timeout=500)
+    event, values = window.read(
+        timeout=500
+    )  # this sets the time between each "refresh"
     co2value += 1
     if co2value > 200000:
         sg.popup("Niveau de CO2 trop élevé. Veuillez intervenir", button_color="red")
