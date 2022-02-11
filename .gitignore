@@ -133,3 +133,6 @@ tags
 
 #vim swp
 *.swp
+
+#
+*:Zone.Identifier
