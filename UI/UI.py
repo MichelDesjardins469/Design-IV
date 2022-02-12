@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 import control
+import componentKeys
 
 # option pour choisir le type de plante
 # Ajouter une option rajouter de la lumiere instant si exemple is annonce gris
@@ -37,214 +38,67 @@ def slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
     ]
 
 
+def controleHeures(
+    keyHeuresA, keyMinutesA, keyHeuresE, keyMinutesE, keyCheckBoxTimers, keyControlTimer
+):
+    return [
+        [
+            sg.Text("Heure d'allumage"),
+            sg.Combo(control.hours, key=keyHeuresA, default_value=8),
+            sg.Combo(control.minutes, key=keyMinutesA, default_value=0),
+            sg.Text("Heure d'éteignement"),
+            sg.Combo(control.hours, key=keyHeuresE, default_value=16),
+            sg.Combo(control.minutes, key=keyMinutesE, default_value=0),
+            sg.Checkbox(
+                "Ne pas considérer les minuteurs",
+                key=keyCheckBoxTimers,
+                default=False,
+                enable_events=True,
+            ),
+            sg.Checkbox(
+                "Off",
+                key=keyControlTimer,
+                default=False,
+                disabled=True,
+                enable_events=True,
+            ),
+        ]
+    ]
+
+
 frame_inputs_layout = [
-    slider2button("Température (°C)", "TempSub", "SliderTemp", "TempAdd", 0, 35, 20),
-    slider2button("CO2 (ppm)", "CO2Sub", "SliderCO2", "CO2Add", 0, 1000, 4000),
-    slider2button("Humidité (%)", "HumidSub", "SliderHumid", "HumidAdd", 0, 100, 80),
-]
-frame_light_layout = [
     slider2button(
-        "Nombre d'heures d'éclairage par jour",
-        "AllumageSubLum",
-        "SliderAllumageLum",
-        "AllumageAddLum",
-        0,
-        24,
-        8,
+        "Température désirée (°C) ", "TempSub", "SliderTemp", "TempAdd", 0, 35, 20
     ),
-    [
-        sg.Text("Heure d'allumage"),
-        sg.Combo(
-            [
-                "Minuit",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "Midi",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-            ],
-            default_value=8,
-        ),
-        sg.Combo(
-            [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29",
-                "30",
-                "31",
-                "32",
-                "33",
-                "34",
-                "35",
-                "36",
-                "37",
-                "38",
-                "39",
-                "40",
-                "41",
-                "42",
-                "43",
-                "44",
-                "45",
-                "46",
-                "47",
-                "48",
-                "49",
-                "50",
-                "51",
-                "52",
-                "53",
-                "54",
-                "55",
-                "56",
-                "57",
-                "58",
-                "59",
-            ],
-            default_value=0,
-        ),
-        sg.Text("Heure d'éteignement"),
-        sg.Combo(
-            [
-                "Minuit",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "Midi",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-            ],
-            default_value=16,
-        ),
-        sg.Combo(
-            [
-                "0",
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "11",
-                "12",
-                "13",
-                "14",
-                "15",
-                "16",
-                "17",
-                "18",
-                "19",
-                "20",
-                "21",
-                "22",
-                "23",
-                "24",
-                "25",
-                "26",
-                "27",
-                "28",
-                "29",
-                "30",
-                "31",
-                "32",
-                "33",
-                "34",
-                "35",
-                "36",
-                "37",
-                "38",
-                "39",
-                "40",
-                "41",
-                "42",
-                "43",
-                "44",
-                "45",
-                "46",
-                "47",
-                "48",
-                "49",
-                "50",
-                "51",
-                "52",
-                "53",
-                "54",
-                "55",
-                "56",
-                "57",
-                "58",
-                "59",
-            ],
-            default_value=0,
-        ),
-    ],
+    slider2button(
+        "Humidité désirée(%)", "HumidSub", "SliderHumid", "HumidAdd", 0, 100, 80
+    ),
 ]
+frame_hours_control_pompe = controleHeures(
+    componentKeys.allKeys["pompe"]["AllumeH"],
+    componentKeys.allKeys["pompe"]["AllumeM"],
+    componentKeys.allKeys["pompe"]["EteintH"],
+    componentKeys.allKeys["pompe"]["EteintM"],
+    componentKeys.allKeys["pompe"]["TimerUsed"],
+    componentKeys.allKeys["pompe"]["OnOffManual"],
+)
+frame_hours_control_moteur = controleHeures(
+    componentKeys.allKeys["moteur"]["AllumeH"],
+    componentKeys.allKeys["moteur"]["AllumeM"],
+    componentKeys.allKeys["moteur"]["EteintH"],
+    componentKeys.allKeys["moteur"]["EteintM"],
+    componentKeys.allKeys["moteur"]["TimerUsed"],
+    componentKeys.allKeys["moteur"]["OnOffManual"],
+)
+frame_hours_control_lumiere = controleHeures(
+    componentKeys.allKeys["lumiere"]["AllumeH"],
+    componentKeys.allKeys["lumiere"]["AllumeM"],
+    componentKeys.allKeys["lumiere"]["EteintH"],
+    componentKeys.allKeys["lumiere"]["EteintM"],
+    componentKeys.allKeys["lumiere"]["TimerUsed"],
+    componentKeys.allKeys["lumiere"]["OnOffManual"],
+)
+
 layout = [
     [
         sg.Frame(
@@ -256,8 +110,24 @@ layout = [
     ],
     [
         sg.Frame(
+            "Contrôle des pompes",
+            frame_hours_control_pompe,
+            font="Any 12",
+            title_color="white",
+        )
+    ],
+    [
+        sg.Frame(
+            "Contrôle des moteurs des volets",
+            frame_hours_control_moteur,
+            font="Any 12",
+            title_color="white",
+        )
+    ],
+    [
+        sg.Frame(
             "Contrôle de la lumière",
-            frame_light_layout,
+            frame_hours_control_lumiere,
             font="Any 12",
             title_color="white",
         )
@@ -269,6 +139,25 @@ co2value = 0
 window = sg.Window(
     "Contrôle de la serre", layout, element_justification="c", size=(1050, 730)
 )
+
+
+def controlTimers(componentKey):
+    if values[componentKeys.allKeys[componentKey]["TimerUsed"]] == True:
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(
+            disabled=False
+        )
+        window[componentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=True)
+        window[componentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=True)
+        window[componentKeys.allKeys[componentKey]["EteintH"]].update(disabled=True)
+        window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=True)
+    else:
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(disabled=True)
+        window[componentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=False)
+        window[componentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=False)
+        window[componentKeys.allKeys[componentKey]["EteintH"]].update(disabled=False)
+        window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=False)
+
+
 while True:  # The Event Loop
     event, values = window.read(
         timeout=500
@@ -279,19 +168,25 @@ while True:  # The Event Loop
         co2value = 0
     if event in (None, "Exit", "Cancel"):
         break
+    elif event == componentKeys.allKeys["lumiere"]["TimerUsed"]:
+        controlTimers("lumiere")
+    elif event == componentKeys.allKeys["moteur"]["TimerUsed"]:
+        controlTimers("moteur")
+    elif event == componentKeys.allKeys["pompe"]["TimerUsed"]:
+        controlTimers("pompe")
+    elif event == "pompeOnOffManual":
+        if values["pompeOnOffManual"] == True:
+            window["pompeOnOffManual"].update(text="On")
+            window["pompeOnOffManual"].update(True)
+        else:
+            window["pompeOnOffManual"].update(text="Off")
+            window["pompeOnOffManual"].update(False)
     elif event == "TempSub":
         newValue = values["SliderTemp"] - 0.5
         window["SliderTemp"].update(newValue)
     elif event == "TempAdd":
         newValue = values["SliderTemp"] + 0.5
         window["SliderTemp"].update(newValue)
-
-    elif event == "CO2Sub":
-        newValue = values["SliderCO2"] - 10
-        window["SliderCO2"].update(newValue)
-    elif event == "CO2Add":
-        newValue = values["SliderCO2"] + 10
-        window["SliderCO2"].update(newValue)
 
     elif event == "HumidSub":
         newValue = values["SliderHumid"] - 1
