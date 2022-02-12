@@ -7,7 +7,7 @@ import componentKeys
 sg.theme("DarkTeal12")
 
 
-def slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
+def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
     return [
         sg.Text(text),
         sg.Button(
@@ -67,36 +67,36 @@ def controleHeures(
 
 
 frame_inputs_layout = [
-    slider2button(
-        "Température désirée (°C) ", "TempSub", "SliderTemp", "TempAdd", 0, 35, 20
+    Slider2button(
+        "Température désirée (°C) ", componentKeys.allKeys["Temp"]["Sub"], "SliderTemp", componentKeys.allKeys["Temp"]["Add"], 0, 35, 20
     ),
-    slider2button(
-        "Humidité désirée(%)", "HumidSub", "SliderHumid", "HumidAdd", 0, 100, 80
+    Slider2button(
+        "Humidité désirée(%)", componentKeys.allKeys["Humidity"]["Sub"], "SliderHumid", componentKeys.allKeys["Humidity"]["Add"], 0, 100, 80
     ),
 ]
 frame_hours_control_pompe = controleHeures(
-    componentKeys.allKeys["pompe"]["AllumeH"],
-    componentKeys.allKeys["pompe"]["AllumeM"],
-    componentKeys.allKeys["pompe"]["EteintH"],
-    componentKeys.allKeys["pompe"]["EteintM"],
-    componentKeys.allKeys["pompe"]["TimerUsed"],
-    componentKeys.allKeys["pompe"]["OnOffManual"],
+    componentKeys.allKeys["Pompe"]["AllumeH"],
+    componentKeys.allKeys["Pompe"]["AllumeM"],
+    componentKeys.allKeys["Pompe"]["EteintH"],
+    componentKeys.allKeys["Pompe"]["EteintM"],
+    componentKeys.allKeys["Pompe"]["TimerUsed"],
+    componentKeys.allKeys["Pompe"]["OnOffManual"],
 )
 frame_hours_control_moteur = controleHeures(
-    componentKeys.allKeys["moteur"]["AllumeH"],
-    componentKeys.allKeys["moteur"]["AllumeM"],
-    componentKeys.allKeys["moteur"]["EteintH"],
-    componentKeys.allKeys["moteur"]["EteintM"],
-    componentKeys.allKeys["moteur"]["TimerUsed"],
-    componentKeys.allKeys["moteur"]["OnOffManual"],
+    componentKeys.allKeys["Moteur"]["AllumeH"],
+    componentKeys.allKeys["Moteur"]["AllumeM"],
+    componentKeys.allKeys["Moteur"]["EteintH"],
+    componentKeys.allKeys["Moteur"]["EteintM"],
+    componentKeys.allKeys["Moteur"]["TimerUsed"],
+    componentKeys.allKeys["Moteur"]["OnOffManual"],
 )
 frame_hours_control_lumiere = controleHeures(
-    componentKeys.allKeys["lumiere"]["AllumeH"],
-    componentKeys.allKeys["lumiere"]["AllumeM"],
-    componentKeys.allKeys["lumiere"]["EteintH"],
-    componentKeys.allKeys["lumiere"]["EteintM"],
-    componentKeys.allKeys["lumiere"]["TimerUsed"],
-    componentKeys.allKeys["lumiere"]["OnOffManual"],
+    componentKeys.allKeys["Lumiere"]["AllumeH"],
+    componentKeys.allKeys["Lumiere"]["AllumeM"],
+    componentKeys.allKeys["Lumiere"]["EteintH"],
+    componentKeys.allKeys["Lumiere"]["EteintM"],
+    componentKeys.allKeys["Lumiere"]["TimerUsed"],
+    componentKeys.allKeys["Lumiere"]["OnOffManual"],
 )
 
 layout = [
@@ -110,7 +110,7 @@ layout = [
     ],
     [
         sg.Frame(
-            "Contrôle des pompes",
+            "Contrôle des Pompes",
             frame_hours_control_pompe,
             font="Any 12",
             title_color="white",
@@ -166,7 +166,13 @@ def controlOnOffs(componentKey):
         window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="Off")
         window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(False)
 
-
+def updateSlider(componentKey, Add):
+    if not Add:
+        newValue = values[componentKeys.allKeys[componentKey]["Slider"]] - 0.5
+        window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+    else:
+        newValue = values[componentKeys.allKeys[componentKey]["Slider"]] + 0.5
+        window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
 while True:  # The Event Loop
     event, values = window.read(
         timeout=500
@@ -177,37 +183,25 @@ while True:  # The Event Loop
         co2value = 0
     if event in (None, "Exit", "Cancel"):
         break
-    elif event == componentKeys.allKeys["lumiere"]["TimerUsed"]:
-        controlTimers("lumiere")
-    elif event == componentKeys.allKeys["moteur"]["TimerUsed"]:
-        controlTimers("moteur")
-    elif event == componentKeys.allKeys["pompe"]["TimerUsed"]:
-        controlTimers("pompe")
-    elif event == componentKeys.allKeys["lumiere"]["OnOffManual"]:
-        controlOnOffs("lumiere")
-    elif event == componentKeys.allKeys["moteur"]["OnOffManual"]:
-        controlOnOffs("moteur")
-    elif event == componentKeys.allKeys["pompe"]["OnOffManual"]:
-        controlOnOffs("pompe")
-    elif event == "TempSub":
-        newValue = values["SliderTemp"] - 0.5
-        window["SliderTemp"].update(newValue)
-    elif event == "TempAdd":
-        newValue = values["SliderTemp"] + 0.5
-        window["SliderTemp"].update(newValue)
-
-    elif event == "HumidSub":
-        newValue = values["SliderHumid"] - 1
-        window["SliderHumid"].update(newValue)
-    elif event == "HumidAdd":
-        newValue = values["SliderHumid"] + 1
-        window["SliderHumid"].update(newValue)
-
-    elif event == "AllumageSubLum":
-        newValue = values["SliderAllumageLum"] - 1
-        window["SliderAllumageLum"].update(newValue)
-    elif event == "AllumageAddLum":
-        newValue = values["SliderAllumageLum"] + 1
-        window["SliderAllumageLum"].update(newValue)
+    elif event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
+        controlTimers("Lumiere")
+    elif event == componentKeys.allKeys["Moteur"]["TimerUsed"]:
+        controlTimers("Moteur")
+    elif event == componentKeys.allKeys["Pompe"]["TimerUsed"]:
+        controlTimers("Pompe")
+    elif event == componentKeys.allKeys["Lumiere"]["OnOffManual"]:
+        controlOnOffs("Lumiere")
+    elif event == componentKeys.allKeys["Moteur"]["OnOffManual"]:
+        controlOnOffs("Moteur")
+    elif event == componentKeys.allKeys["Pompe"]["OnOffManual"]:
+        controlOnOffs("Pompe")
+    elif event == componentKeys.allKeys["Temp"]["Sub"]:
+        updateSlider("Temp", False)
+    elif event == componentKeys.allKeys["Temp"]["Add"]:
+        updateSlider("Temp", True)
+    elif event == componentKeys.allKeys["Humidity"]["Sub"]:
+        updateSlider("Humidity", False)
+    elif event == componentKeys.allKeys["Humidity"]["Add"]:
+        updateSlider("Humidity", True)
     elif event == "Soumettre" and allNumValues(values) == True:
         print(values)

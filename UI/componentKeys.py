@@ -2,9 +2,9 @@ import PySimpleGUI as sg
 import control
 
 
-tempKeys = {"sub": "TempSub", "slider": "SliderTemp", "add": "TempAdd"}
+tempKeys = {"Sub": "TempSub", "Slider": "SliderTemp", "Add": "TempAdd"}
 
-humidityKeys = {"sub": "HumidSub", "slider": "SliderHumid", "add": "HumidAdd"}
+humidityKeys = {"Sub": "HumidSub", "Slider": "SliderHumid", "Add": "HumidAdd"}
 
 pompeKeys = {
     "AllumeH": "AllumePompeH",
@@ -31,9 +31,9 @@ lumiereKeys = {
     "OnOffManual": "LumiereOnOffManual",
 }
 allKeys = {
-    "temp": tempKeys,
-    "humidity": humidityKeys,
-    "pompe": pompeKeys,
-    "moteur": moteurKeys,
-    "lumiere": lumiereKeys,
+    "Temp": tempKeys,
+    "Humidity": humidityKeys,
+    "Pompe": pompeKeys,
+    "Moteur": moteurKeys,
+    "Lumiere": lumiereKeys,
 }
