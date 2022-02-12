@@ -158,6 +158,15 @@ def controlTimers(componentKey):
         window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=False)
 
 
+def controlOnOffs(componentKey):
+    if values[componentKeys.allKeys[componentKey]["OnOffManual"]] == True:
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="On")
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(True)
+    else:
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="Off")
+        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(False)
+
+
 while True:  # The Event Loop
     event, values = window.read(
         timeout=500
@@ -174,13 +183,12 @@ while True:  # The Event Loop
         controlTimers("moteur")
     elif event == componentKeys.allKeys["pompe"]["TimerUsed"]:
         controlTimers("pompe")
-    elif event == "pompeOnOffManual":
-        if values["pompeOnOffManual"] == True:
-            window["pompeOnOffManual"].update(text="On")
-            window["pompeOnOffManual"].update(True)
-        else:
-            window["pompeOnOffManual"].update(text="Off")
-            window["pompeOnOffManual"].update(False)
+    elif event == componentKeys.allKeys["lumiere"]["OnOffManual"]:
+        controlOnOffs("lumiere")
+    elif event == componentKeys.allKeys["moteur"]["OnOffManual"]:
+        controlOnOffs("moteur")
+    elif event == componentKeys.allKeys["pompe"]["OnOffManual"]:
+        controlOnOffs("pompe")
     elif event == "TempSub":
         newValue = values["SliderTemp"] - 0.5
         window["SliderTemp"].update(newValue)
