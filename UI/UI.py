@@ -14,7 +14,7 @@ def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
             "",
             key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./minus_sign.png",
+            image_filename="UI/minus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
@@ -22,21 +22,23 @@ def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
             key=keySlider,
             range=(minValue, maxValue),
             default_value=defaultValue,
-            size=(20, 15),
+            size=(20, 5),
             orientation="horizontal",
             font=("Helvetica", 12),
             resolution=0.5,
+            enable_events=True,
         ),
         sg.Button(
             "",
             key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="./plus_sign.png",
+            image_filename="UI/plus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
     ]
-
+def nouvelAppareilPopup():
+    return [sg.OptionMenu(['Unité de chauffage', 'Ventilateur', 'Lumière',],s=(15,2))]
 
 def controleHeures(
     keyHeuresA, keyMinutesA, keyHeuresE, keyMinutesE, keyCheckBoxTimers, keyControlTimer
@@ -133,7 +135,7 @@ layout = [
         )
     ],
     [sg.Output(size=(80, 5))],
-    [sg.Button("Soumettre"), sg.Cancel()],
+    [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
 ]
 co2value = 0
 window = sg.Window(
@@ -178,9 +180,11 @@ while True:  # The Event Loop
         timeout=500
     )  # this sets the time between each "refresh"
     co2value += 1
-    if co2value > 200000:
-        sg.popup("Niveau de CO2 trop élevé. Veuillez intervenir", button_color="red")
+    if co2value > 5:
+        #20sg.popup('Jadore les lapins',title='Nouvel appareil detect',  button_color="red")
         co2value = 0
+        confirmation, appareilChoisi = sg.Window('NOUVEL APAREIL DÉTECTÉ', [[sg.T("Veuillez sélectionner l'appareil correspondant")], [nouvelAppareilPopup()], [sg.Yes('Confirmer', s=10), sg.No('Annuler', s=10)]], disable_close=True).read(close=True)
+        print( appareilChoisi[0])
     if event in (None, "Exit", "Cancel"):
         break
     elif event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
@@ -203,5 +207,5 @@ while True:  # The Event Loop
         updateSlider("Humidity", False)
     elif event == componentKeys.allKeys["Humidity"]["Add"]:
         updateSlider("Humidity", True)
-    elif event == "Soumettre" and allNumValues(values) == True:
+    elif event == "Soumettre" :
         print(values)
