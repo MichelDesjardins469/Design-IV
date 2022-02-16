@@ -17,7 +17,7 @@ while True:
     try:
         high = resp[3]
         low = resp[4]
-    except TypeError: #à changer
+    except IndexError: #à changer
         print("Lecture du capteur de CO2 pas possible") #envoyé -2
 
     co2 = (high * 256) + low
