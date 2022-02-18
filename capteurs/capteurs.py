@@ -6,7 +6,7 @@ DHT = 4
 ser = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.5)
 ser.flushInput()
 
-#when message recu:
+# when message recu:
 while True:
     h, t = dht.read_retry(dht.DHT22, DHT)
 
@@ -17,10 +17,10 @@ while True:
     try:
         high = resp[3]
         low = resp[4]
-    except IndexError: #à changer
-        print("Lecture du capteur de CO2 pas possible") #envoyé -2
+    except IndexError:  # à changer
+        print("Lecture du capteur de CO2 pas possible")  # envoyé -2
 
     co2 = (high * 256) + low
 
-    #envoie info:
-    print(h +";" + t + ";"+ str(co2))
+    # envoie info:
+    print(h + ";" + t + ";" + str(co2))

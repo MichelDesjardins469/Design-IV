@@ -4,7 +4,6 @@ import componentKeys
 
 # option pour choisir le type de plante
 # Ajouter une option rajouter de la lumiere instant si exemple is annonce gris
-sg.theme("DarkTeal12")
 
 
 def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
@@ -37,8 +36,11 @@ def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
             image_subsample=2,
         ),
     ]
+
+
 def nouvelAppareilPopup():
-    return [sg.OptionMenu(['Unité de chauffage', 'Ventilateur', 'Lumière',],s=(15,2))]
+    return [sg.OptionMenu(["Unité de chauffage", "Ventilateur", "Lumière"], s=(15, 2))]
+
 
 def controleHeures(
     keyHeuresA, keyMinutesA, keyHeuresE, keyMinutesE, keyCheckBoxTimers, keyControlTimer
@@ -68,123 +70,154 @@ def controleHeures(
     ]
 
 
-frame_inputs_layout = [
-    Slider2button(
-        "Température désirée (°C) ", componentKeys.allKeys["Temp"]["Sub"], "SliderTemp", componentKeys.allKeys["Temp"]["Add"], 0, 35, 20
-    ),
-    Slider2button(
-        "Humidité désirée(%)", componentKeys.allKeys["Humidity"]["Sub"], "SliderHumid", componentKeys.allKeys["Humidity"]["Add"], 0, 100, 80
-    ),
-]
-frame_hours_control_pompe = controleHeures(
-    componentKeys.allKeys["Pompe"]["AllumeH"],
-    componentKeys.allKeys["Pompe"]["AllumeM"],
-    componentKeys.allKeys["Pompe"]["EteintH"],
-    componentKeys.allKeys["Pompe"]["EteintM"],
-    componentKeys.allKeys["Pompe"]["TimerUsed"],
-    componentKeys.allKeys["Pompe"]["OnOffManual"],
-)
-frame_hours_control_moteur = controleHeures(
-    componentKeys.allKeys["Moteur"]["AllumeH"],
-    componentKeys.allKeys["Moteur"]["AllumeM"],
-    componentKeys.allKeys["Moteur"]["EteintH"],
-    componentKeys.allKeys["Moteur"]["EteintM"],
-    componentKeys.allKeys["Moteur"]["TimerUsed"],
-    componentKeys.allKeys["Moteur"]["OnOffManual"],
-)
-frame_hours_control_lumiere = controleHeures(
-    componentKeys.allKeys["Lumiere"]["AllumeH"],
-    componentKeys.allKeys["Lumiere"]["AllumeM"],
-    componentKeys.allKeys["Lumiere"]["EteintH"],
-    componentKeys.allKeys["Lumiere"]["EteintM"],
-    componentKeys.allKeys["Lumiere"]["TimerUsed"],
-    componentKeys.allKeys["Lumiere"]["OnOffManual"],
-)
-
-layout = [
-    [
-        sg.Frame(
-            "Variables contrôlables",
-            frame_inputs_layout,
-            font="Any 12",
-            title_color="white",
+class Components:
+    def __init__(self):
+        self.frame_inputs_layout = [
+            Slider2button(
+                "Température désirée (°C) ",
+                componentKeys.allKeys["Temp"]["Sub"],
+                "SliderTemp",
+                componentKeys.allKeys["Temp"]["Add"],
+                0,
+                35,
+                20,
+            ),
+            Slider2button(
+                "Humidité désirée(%)",
+                componentKeys.allKeys["Humidity"]["Sub"],
+                "SliderHumid",
+                componentKeys.allKeys["Humidity"]["Add"],
+                0,
+                100,
+                80,
+            ),
+        ]
+        self.frame_hours_control_pompe = controleHeures(
+            componentKeys.allKeys["Pompe"]["AllumeH"],
+            componentKeys.allKeys["Pompe"]["AllumeM"],
+            componentKeys.allKeys["Pompe"]["EteintH"],
+            componentKeys.allKeys["Pompe"]["EteintM"],
+            componentKeys.allKeys["Pompe"]["TimerUsed"],
+            componentKeys.allKeys["Pompe"]["OnOffManual"],
         )
-    ],
-    [
-        sg.Frame(
-            "Contrôle des Pompes",
-            frame_hours_control_pompe,
-            font="Any 12",
-            title_color="white",
+        self.frame_hours_control_moteur = controleHeures(
+            componentKeys.allKeys["Moteur"]["AllumeH"],
+            componentKeys.allKeys["Moteur"]["AllumeM"],
+            componentKeys.allKeys["Moteur"]["EteintH"],
+            componentKeys.allKeys["Moteur"]["EteintM"],
+            componentKeys.allKeys["Moteur"]["TimerUsed"],
+            componentKeys.allKeys["Moteur"]["OnOffManual"],
         )
-    ],
-    [
-        sg.Frame(
-            "Contrôle des moteurs des volets",
-            frame_hours_control_moteur,
-            font="Any 12",
-            title_color="white",
+        self.frame_hours_control_lumiere = controleHeures(
+            componentKeys.allKeys["Lumiere"]["AllumeH"],
+            componentKeys.allKeys["Lumiere"]["AllumeM"],
+            componentKeys.allKeys["Lumiere"]["EteintH"],
+            componentKeys.allKeys["Lumiere"]["EteintM"],
+            componentKeys.allKeys["Lumiere"]["TimerUsed"],
+            componentKeys.allKeys["Lumiere"]["OnOffManual"],
         )
-    ],
-    [
-        sg.Frame(
-            "Contrôle de la lumière",
-            frame_hours_control_lumiere,
-            font="Any 12",
-            title_color="white",
-        )
-    ],
-    [sg.Output(size=(80, 5))],
-    [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
-]
-co2value = 0
-window = sg.Window(
-    "Contrôle de la serre", layout, element_justification="c", size=(1050, 730)
-)
+
+        self.layout = [
+            [
+                sg.Frame(
+                    "Variables contrôlables",
+                    self.frame_inputs_layout,
+                    font="Any 12",
+                    title_color="white",
+                )
+            ],
+            [
+                sg.Frame(
+                    "Contrôle des Pompes",
+                    self.frame_hours_control_pompe,
+                    font="Any 12",
+                    title_color="white",
+                )
+            ],
+            [
+                sg.Frame(
+                    "Contrôle des moteurs des volets",
+                    self.frame_hours_control_moteur,
+                    font="Any 12",
+                    title_color="white",
+                )
+            ],
+            [
+                sg.Frame(
+                    "Contrôle de la lumière",
+                    self.frame_hours_control_lumiere,
+                    font="Any 12",
+                    title_color="white",
+                )
+            ],
+            [sg.Output(size=(80, 5))],
+            [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
+        ]
+
+    def controlTimers(componentKey):
+        if values[componentKeys.allKeys[componentKey]["TimerUsed"]] == True:
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(
+                disabled=False
+            )
+            window[componentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=True)
+            window[componentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=True)
+            window[componentKeys.allKeys[componentKey]["EteintH"]].update(disabled=True)
+            window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=True)
+        else:
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(
+                disabled=True
+            )
+            window[componentKeys.allKeys[componentKey]["AllumeH"]].update(
+                disabled=False
+            )
+            window[componentKeys.allKeys[componentKey]["AllumeM"]].update(
+                disabled=False
+            )
+            window[componentKeys.allKeys[componentKey]["EteintH"]].update(
+                disabled=False
+            )
+            window[componentKeys.allKeys[componentKey]["EteintM"]].update(
+                disabled=False
+            )
+
+    def controlOnOffs(componentKey):
+        if values[componentKeys.allKeys[componentKey]["OnOffManual"]] == True:
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="On")
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(True)
+        else:
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(
+                text="Off"
+            )
+            window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(False)
+
+    def updateSlider(componentKey, Add):
+        if not Add:
+            newValue = values[componentKeys.allKeys[componentKey]["Slider"]] - 0.5
+            window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+        else:
+            newValue = values[componentKeys.allKeys[componentKey]["Slider"]] + 0.5
+            window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
 
 
-def controlTimers(componentKey):
-    if values[componentKeys.allKeys[componentKey]["TimerUsed"]] == True:
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(
-            disabled=False
-        )
-        window[componentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=True)
-        window[componentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=True)
-        window[componentKeys.allKeys[componentKey]["EteintH"]].update(disabled=True)
-        window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=True)
-    else:
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(disabled=True)
-        window[componentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=False)
-        window[componentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=False)
-        window[componentKeys.allKeys[componentKey]["EteintH"]].update(disabled=False)
-        window[componentKeys.allKeys[componentKey]["EteintM"]].update(disabled=False)
-
-
-def controlOnOffs(componentKey):
-    if values[componentKeys.allKeys[componentKey]["OnOffManual"]] == True:
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="On")
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(True)
-    else:
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(text="Off")
-        window[componentKeys.allKeys[componentKey]["OnOffManual"]].update(False)
-
-def updateSlider(componentKey, Add):
-    if not Add:
-        newValue = values[componentKeys.allKeys[componentKey]["Slider"]] - 0.5
-        window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
-    else:
-        newValue = values[componentKeys.allKeys[componentKey]["Slider"]] + 0.5
-        window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+"""
 while True:  # The Event Loop
     event, values = window.read(
         timeout=500
     )  # this sets the time between each "refresh"
     co2value += 1
     if co2value > 5:
-        #20sg.popup('Jadore les lapins',title='Nouvel appareil detect',  button_color="red")
+        # 20sg.popup('Jadore les lapins',title='Nouvel appareil detect',  button_color="red")
         co2value = 0
-        confirmation, appareilChoisi = sg.Window('NOUVEL APAREIL DÉTECTÉ', [[sg.T("Veuillez sélectionner l'appareil correspondant")], [nouvelAppareilPopup()], [sg.Yes('Confirmer', s=10), sg.No('Annuler', s=10)]], disable_close=True).read(close=True)
-        print( appareilChoisi[0])
+        confirmation, appareilChoisi = sg.Window(
+            "NOUVEL APAREIL DÉTECTÉ",
+            [
+                [sg.T("Veuillez sélectionner l'appareil correspondant")],
+                [nouvelAppareilPopup()],
+                [sg.Yes("Confirmer", s=10), sg.No("Annuler", s=10)],
+            ],
+            disable_close=True,
+        ).read(close=True)
+        print(appareilChoisi[0])
     if event in (None, "Exit", "Cancel"):
         break
     elif event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
@@ -207,5 +240,6 @@ while True:  # The Event Loop
         updateSlider("Humidity", False)
     elif event == componentKeys.allKeys["Humidity"]["Add"]:
         updateSlider("Humidity", True)
-    elif event == "Soumettre" :
+    elif event == "Soumettre":
         print(values)
+       """
