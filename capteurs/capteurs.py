@@ -13,14 +13,16 @@ while True:
     ser.flushInput()
     ser.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
     resp = ser.read(7)
-
+    co2=-1
+    
     try:
         high = resp[3]
         low = resp[4]
-    except IndexError:  # à changer
+        co2 = (high * 256) + low
+    except IndexError:
         print("Lecture du capteur de CO2 pas possible")  # envoyé -2
 
-    co2 = (high * 256) + low
+    
 
     # envoie info:
-    print(h + ";" + t + ";" + str(co2))
+    print(str(h) + ";" + str(t) + ";" + str(co2))
