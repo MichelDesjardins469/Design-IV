@@ -4,20 +4,20 @@ import PySimpleGUI as sg
 import control
 import componentKeys
 import time
-from multiprocessing import Process
+import threading
 
 sg.theme("DarkTeal12")
 
 
 def printBonjour():
-    print("Bonjour")
-
+    while True:
+        print("Bonjour")
+        time.sleep(10)
 
 components = UI.Components()
 interface = Interface.Interface(components)
-p1 = Process(target=interface.getValuesTest())
-p1.start()
-p2 = Process(target=printBonjour())
-p2.start()
-p1.join()
-p2.join()
+threadId1 = threading.Thread(target=interface.getValuesTest)
+threadId2 = threading.Thread(target=printBonjour)
+
+threadId1.start()
+threadId2.start()

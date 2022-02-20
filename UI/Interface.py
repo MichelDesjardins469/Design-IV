@@ -3,8 +3,7 @@ import UI
 import componentKeys
 
 sg.theme("DarkTeal12")
-# trouver pour faire fonctionner les boutons et executer la fonction getValuesTest en background
-
+#faire afficher des indicateurs pour montrer que les appareils fonctionennt
 
 class Interface:
     def __init__(self, components):
