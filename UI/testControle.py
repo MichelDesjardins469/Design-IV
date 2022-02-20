@@ -14,6 +14,7 @@ def printValues():
         print(interface.getValues())
         time.sleep(5)
 
+
 components = UI.Components()
 interface = Interface.Interface(components)
 threadId1 = threading.Thread(target=interface.runInterface)

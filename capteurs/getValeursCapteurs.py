@@ -6,6 +6,7 @@ DHT = 4
 ser = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.5)
 ser.flushInput()
 
+
 def getValeurs():
     h, t = dht.read_retry(dht.DHT22, DHT)
 
@@ -19,7 +20,7 @@ def getValeurs():
         low = resp[4]
         co2 = (high * 256) + low
     except TypeError:
-        return(t, h, -1)
+        return (t, h, -1)
 
-    #envoie info:
-    return(t, h, co2)
+    # envoie info:
+    return (t, h, co2)
