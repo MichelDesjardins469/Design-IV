@@ -13,13 +13,13 @@ def getValeurs():
     ser.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
     resp = ser.read(7)
     co2 = -1
-    
+
     try:
         high = resp[3]
         low = resp[4]
         co2 = (high * 256) + low
     except TypeError:
-        print("Lecture du capteur de CO2 pas possible")
+        return(t, h, -1)
 
     #envoie info:
     return(t, h, co2)
