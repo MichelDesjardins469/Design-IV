@@ -9,15 +9,15 @@ import threading
 sg.theme("DarkTeal12")
 
 
-def printBonjour():
+def printValues():
     while True:
-        print("Bonjour")
-        time.sleep(10)
+        print(interface.getValues())
+        time.sleep(5)
 
 components = UI.Components()
 interface = Interface.Interface(components)
-threadId1 = threading.Thread(target=interface.getValuesTest)
-threadId2 = threading.Thread(target=printBonjour)
+threadId1 = threading.Thread(target=interface.runInterface)
+threadId2 = threading.Thread(target=printValues)
 
 threadId1.start()
 threadId2.start()

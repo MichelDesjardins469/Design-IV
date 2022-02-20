@@ -3,11 +3,14 @@ import UI
 import componentKeys
 
 sg.theme("DarkTeal12")
-#faire afficher des indicateurs pour montrer que les appareils fonctionennt
+# faire afficher des indicateurs pour montrer que les appareils fonctionennt
+
 
 class Interface:
     def __init__(self, components):
         self.layout = components.layout
+        self.values = None
+        self.event = None
         self.window = sg.Window(
             "Contrôle de la serre", self.layout, element_justification="c"
         )
@@ -68,7 +71,10 @@ class Interface:
             newValue = self.values[componentKeys.allKeys[componentKey]["Slider"]] + 0.5
             self.window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
 
-    def getValuesTest(self):
+    def getValues(self):
+        return self.values
+
+    def runInterface(self):
         while True:
             self.event, self.values = self.window.read(timeout=500)
             if self.event in (None, "Exit", "Cancel"):
