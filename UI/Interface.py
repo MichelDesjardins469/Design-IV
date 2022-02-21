@@ -3,7 +3,6 @@ import UI
 import componentKeys
 
 sg.theme("DarkTeal12")
-# faire afficher des indicateurs pour montrer que les appareils fonctionennt
 
 
 class Interface:
@@ -85,6 +84,9 @@ class Interface:
                 self.controlTimers("Moteur")
             elif self.event == componentKeys.allKeys["Pompe"]["TimerUsed"]:
                 self.controlTimers("Pompe")
+                self.window[componentKeys.allKeys["Lumiere"]["StateImage"]].update(
+                    filename="UI/green_power_sign.png"
+                )
             elif self.event == componentKeys.allKeys["Lumiere"]["OnOffManual"]:
                 self.controlOnOffs("Lumiere")
             elif self.event == componentKeys.allKeys["Moteur"]["OnOffManual"]:

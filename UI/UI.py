@@ -75,9 +75,8 @@ def etatMachine(textDescription):
         sg.T(textDescription),
         sg.Image(
             key=componentKeys.allKeys[textDescription]["StateImage"],
-            filename="UI/power_sign.png",
-            size=(20, 21),
-            background_color="red",
+            filename="UI/red_power_sign.png",
+            background_color=sg.theme_background_color(),
         ),
     ]
 
