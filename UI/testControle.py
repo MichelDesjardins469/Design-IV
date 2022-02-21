@@ -21,4 +21,4 @@ threadId1 = threading.Thread(target=interface.runInterface)
 threadId2 = threading.Thread(target=printValues)
 
 threadId1.start()
-threadId2.start()
+# threadId2.start()

@@ -70,6 +70,18 @@ def controleHeures(
     ]
 
 
+def etatMachine(textDescription):
+    return [
+        sg.T(textDescription),
+        sg.Image(
+            key=componentKeys.allKeys[textDescription]["StateImage"],
+            filename="UI/power_sign.png",
+            size=(20, 21),
+            background_color="red",
+        ),
+    ]
+
+
 class Components:
     def __init__(self):
         self.frame_inputs_layout = [
@@ -116,6 +128,13 @@ class Components:
             componentKeys.allKeys["Lumiere"]["TimerUsed"],
             componentKeys.allKeys["Lumiere"]["OnOffManual"],
         )
+        self.frame_machines_state = [
+            etatMachine("Ventilateur"),
+            etatMachine("Moteur"),
+            etatMachine("Pompe"),
+            etatMachine("Temp"),
+            etatMachine("Lumiere"),
+        ]
 
         self.layout = [
             [
@@ -151,6 +170,15 @@ class Components:
                 )
             ],
             [sg.Output(size=(80, 5))],
+            [
+                sg.Frame(
+                    "État de la machinerie",
+                    self.frame_machines_state,
+                    font="Any 12",
+                    title_color="white",
+                    element_justification="right",
+                )
+            ],
             [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
         ]
 
@@ -197,49 +225,3 @@ class Components:
         else:
             newValue = values[componentKeys.allKeys[componentKey]["Slider"]] + 0.5
             window[componentKeys.allKeys[componentKey]["Slider"]].update(newValue)
-
-
-"""
-while True:  # The Event Loop
-    event, values = window.read(
-        timeout=500
-    )  # this sets the time between each "refresh"
-    co2value += 1
-    if co2value > 5:
-        # 20sg.popup('Jadore les lapins',title='Nouvel appareil detect',  button_color="red")
-        co2value = 0
-        confirmation, appareilChoisi = sg.Window(
-            "NOUVEL APAREIL DÉTECTÉ",
-            [
-                [sg.T("Veuillez sélectionner l'appareil correspondant")],
-                [nouvelAppareilPopup()],
-                [sg.Yes("Confirmer", s=10), sg.No("Annuler", s=10)],
-            ],
-            disable_close=True,
-        ).read(close=True)
-        print(appareilChoisi[0])
-    if event in (None, "Exit", "Cancel"):
-        break
-    elif event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
-        controlTimers("Lumiere")
-    elif event == componentKeys.allKeys["Moteur"]["TimerUsed"]:
-        controlTimers("Moteur")
-    elif event == componentKeys.allKeys["Pompe"]["TimerUsed"]:
-        controlTimers("Pompe")
-    elif event == componentKeys.allKeys["Lumiere"]["OnOffManual"]:
-        controlOnOffs("Lumiere")
-    elif event == componentKeys.allKeys["Moteur"]["OnOffManual"]:
-        controlOnOffs("Moteur")
-    elif event == componentKeys.allKeys["Pompe"]["OnOffManual"]:
-        controlOnOffs("Pompe")
-    elif event == componentKeys.allKeys["Temp"]["Sub"]:
-        updateSlider("Temp", False)
-    elif event == componentKeys.allKeys["Temp"]["Add"]:
-        updateSlider("Temp", True)
-    elif event == componentKeys.allKeys["Humidity"]["Sub"]:
-        updateSlider("Humidity", False)
-    elif event == componentKeys.allKeys["Humidity"]["Add"]:
-        updateSlider("Humidity", True)
-    elif event == "Soumettre":
-        print(values)
-       """
