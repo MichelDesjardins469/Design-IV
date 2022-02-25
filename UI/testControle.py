@@ -4,7 +4,8 @@ import PySimpleGUI as sg
 import control
 import componentKeys
 import time
-import threading
+from multiprocessing import Process
+
 
 sg.theme("DarkTeal12")
 
@@ -17,8 +18,6 @@ def printValues():
 
 components = UI.Components()
 interface = Interface.Interface(components)
-threadId1 = threading.Thread(target=interface.runInterface)
-threadId2 = threading.Thread(target=printValues)
-
-threadId1.start()
-# threadId2.start()
+p1 = Process(target=interface.getValuesTest())
+p1.start()
+p1.join()

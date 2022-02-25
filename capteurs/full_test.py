@@ -25,11 +25,14 @@ def getValeurs():
     # envoie info:
     return (t, h, co2)
 
+
 sleep(30)
+
 
 def lecture():
     time.sleep(3)
     return "THIS IS A TEST\n"
+
 
 ser = serial.Serial(
     port="/dev/ttyGS0",
@@ -37,14 +40,14 @@ ser = serial.Serial(
     parity=serial.PARITY_NONE,
     stopbits=serial.STOPBITS_ONE,
     bytesize=serial.EIGHTBITS,
-    timeout=None
+    timeout=None,
 )
 
 while 1:
     x = ser.readline()
-    #print(x)
-    if(x == b'run\n'):
+    # print(x)
+    if x == b"run\n":
         valeurs = getValeurs()
         msg = str(valeurs[0]) + ":" + str(valeurs[1]) + ":" + str(valeurs[2])
-        ser.write(bytes(msg, 'UTF-8'))
+        ser.write(bytes(msg, "UTF-8"))
     sleep(0.1)

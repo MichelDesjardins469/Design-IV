@@ -9,6 +9,7 @@ def load_config(config):
     global TARGET_TEMP
     TARGET_TEMP = config.target_temp
 
+
 def logic_loop(sensorReadings):
     return_value = 0
     if sensorReadings.temp_int < TARGET_TEMP:

@@ -13,7 +13,7 @@ def main():
     while True:
         # ping_watchdog()
         changements = interface.checkChangements()
-        if changements not empty:
+        if changements:
             controlLogic.update(changements)
         readings = hardware.get_lecture_sensors_test_random()
         print("La température est de :" + str(readings.temp_int) + "˚C")
@@ -34,7 +34,7 @@ def load_config():
 
 
 def ping_watchdog():
-    f = open('/dev/watchdog', 'w')
+    f = open("/dev/watchdog", "w")
     f.write("S")
     f.close()
 

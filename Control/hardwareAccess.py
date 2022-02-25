@@ -16,12 +16,14 @@ PIN_VALVE_4 = 0
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
-#pour fins de démonstrations
+# pour fins de démonstrations
 heat_on = False
 lights_on = False
 
-complete_readings = namedtuple('complete_readings', 'temp_int temp_ext hum_int hum_ext CO2_int')
-station_reading = namedtuple('station_reading', 'temp hum CO2')
+complete_readings = namedtuple(
+    "complete_readings", "temp_int temp_ext hum_int hum_ext CO2_int"
+)
+station_reading = namedtuple("station_reading", "temp hum CO2")
 
 
 class HardwareAccess:
@@ -54,7 +56,7 @@ class HardwareAccess:
                 parity=serial.PARITY_NONE,
                 stopbits=serial.STOPBITS_ONE,
                 bytesize=serial.EIGHTBITS,
-                timeout=10
+                timeout=10,
             )
             self.list_serials.append(ser)
 
@@ -101,9 +103,9 @@ class HardwareAccess:
 
         results = []
         for ser in self.list_serials:
-            ser.write(b'run\n')
+            ser.write(b"run\n")
             reading = ser.readline()
-            if reading == b'':
+            if reading == b"":
                 print("couldn't not contact one station")
                 results.append(None)
             else:
@@ -117,7 +119,9 @@ class HardwareAccess:
         hum_int = np.mean([reading_int_1.hum, reading_int_2.hum])
         CO2_int = np.mean([reading_int_1.CO2, reading_int_2.CO2])
 
-        return complete_readings(temp_int, reading_ext.temp, hum_int, reading_ext.hum, CO2_int)
+        return complete_readings(
+            temp_int, reading_ext.temp, hum_int, reading_ext.hum, CO2_int
+        )
 
     def get_lecture_interieur_1(self):
         return station_reading(0, 0, 0)
