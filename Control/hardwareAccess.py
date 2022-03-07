@@ -17,8 +17,7 @@ LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
 # pour fins de démonstrations
-heat_on = False
-lights_on = False
+
 
 complete_readings = namedtuple(
     "complete_readings", "temp_int temp_ext hum_int hum_ext CO2_int"
@@ -28,6 +27,8 @@ station_reading = namedtuple("station_reading", "temp hum CO2")
 
 class HardwareAccess:
     list_serials = []
+    heat_on = False
+    lights_on = False
 
     def __init__(self):
         pass
@@ -75,10 +76,7 @@ class HardwareAccess:
     def turn_on_water_valve(self, section_id):
         pass
 
-    def turn_on_co2(self):
-        pass
-
-    def turn_on_fan(self):
+    def control_fan(self):
         pass
 
     def open_volets(self):
@@ -87,17 +85,21 @@ class HardwareAccess:
     def close_volet(self):
         pass
 
-    def turn_on_lights(self):
-        global lights_on
-        if not lights_on:
-            print("lumières activées")
+    def control_lights(self, on):
+        if on:
+            GPIO.output(PIN_LIGHTS, GPIO.HIGH)
+            self.lights_on = True
+        else:
+            GPIO.output(PIN_LIGHTS, GPIO.LOW)
+            self.lights_on = False
 
-            lights_on = True
-
-    def turn_on_heat(self):
-        global heat_on
-        heat_on = True
-        print("chauffage activé")
+    def control_heat(self, on):
+        if on:
+            GPIO.output(PIN_HEATER, GPIO.HIGH)
+            self.heat_on = True
+        else:
+            GPIO.output(PIN_HEATER, GPIO.LOW)
+            self.heat_on = False
 
     def get_lecture_sensors(self):
 
@@ -109,7 +111,7 @@ class HardwareAccess:
                 print("couldn't not contact one station")
                 results.append(None)
             else:
-                results.append(reading)
+                results.append(reading.decode("UtF-8"))
 
         reading_int_1 = self.get_lecture_interieur_1()
         reading_int_2 = self.get_lecture_interieur_2()
@@ -133,7 +135,7 @@ class HardwareAccess:
         return station_reading(0, 0, 0)
 
     def get_lecture_sensors_test_random(self):
-        if heat_on or np.random.random_integers(0, 10) <= 8:
+        if self.heat_on or np.random.random_integers(0, 10) <= 8:
             temp_int = np.random.normal(23, 2)
         else:
             temp_int = np.random.normal(18, 2)

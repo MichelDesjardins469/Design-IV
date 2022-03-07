@@ -5,6 +5,7 @@ import json
 
 config_file = "config.json"
 hardware = HardwareAccess()
+logic = controlLogic()
 
 
 def main():
@@ -14,10 +15,10 @@ def main():
         # ping_watchdog()
         changements = interface.checkChangements()
         if changements:
-            controlLogic.update(changements)
+            logic.update(changements)
         readings = hardware.get_lecture_sensors_test_random()
         print("La température est de :" + str(readings.temp_int) + "˚C")
-        actions = controlLogic.logic_loop(readings)
+        actions = logic.logic_loop(readings)
         hardware.traitement_actions(actions)
         time.sleep(5)
 
@@ -30,7 +31,7 @@ def setup():
 def load_config():
     f = open(config_file)
     config = json.load(f)
-    controlLogic.load_config(config)
+    logic.load_config(config)
 
 
 def ping_watchdog():
