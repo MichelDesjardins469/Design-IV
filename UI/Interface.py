@@ -75,38 +75,41 @@ class Interface:
         return self.values
 
     def checkChangements():
-        valueChanged = self.valueChanged
-        self.valueChanged = False
-        return valueChanged
+        valueChangedTemp = self.valueChanged
+        if self.valueChanged == True:
+            self.valueChanged = False
+        return valueChangedTemp
 
     def runInterface(self):
         while True:
             self.event, self.values = self.window.read(timeout=500)
             if self.event in (None, "Exit", "Cancel"):
                 break
-            elif self.event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
+            else:
                 self.valueChanged = True
-                self.controlTimers("Lumiere")
-            elif self.event == componentKeys.allKeys["Moteur"]["TimerUsed"]:
-                self.controlTimers("Moteur")
-            elif self.event == componentKeys.allKeys["Pompe"]["TimerUsed"]:
-                self.controlTimers("Pompe")
-                self.window[componentKeys.allKeys["Lumiere"]["StateImage"]].update(
-                    filename="UI/green_power_sign.png"
-                )
-            elif self.event == componentKeys.allKeys["Lumiere"]["OnOffManual"]:
-                self.controlOnOffs("Lumiere")
-            elif self.event == componentKeys.allKeys["Moteur"]["OnOffManual"]:
-                self.controlOnOffs("Moteur")
-            elif self.event == componentKeys.allKeys["Pompe"]["OnOffManual"]:
-                self.controlOnOffs("Pompe")
-            elif self.event == componentKeys.allKeys["Temp"]["Sub"]:
-                self.updateSlider("Temp", False)
-            elif self.event == componentKeys.allKeys["Temp"]["Add"]:
-                self.updateSlider("Temp", True)
-            elif self.event == componentKeys.allKeys["Humidity"]["Sub"]:
-                self.updateSlider("Humidity", False)
-            elif self.event == componentKeys.allKeys["Humidity"]["Add"]:
-                self.updateSlider("Humidity", True)
-            elif self.event == "Soumettre":
-                print(self.values)
+                if self.event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
+                    self.valueChanged = True
+                    self.controlTimers("Lumiere")
+                if self.event == componentKeys.allKeys["Moteur"]["TimerUsed"]:
+                    self.controlTimers("Moteur")
+                if self.event == componentKeys.allKeys["Pompe"]["TimerUsed"]:
+                    self.controlTimers("Pompe")
+                    self.window[componentKeys.allKeys["Lumiere"]["StateImage"]].update(
+                        filename="UI/green_power_sign.png"
+                    )
+                if self.event == componentKeys.allKeys["Lumiere"]["OnOffManual"]:
+                    self.controlOnOffs("Lumiere")
+                if self.event == componentKeys.allKeys["Moteur"]["OnOffManual"]:
+                    self.controlOnOffs("Moteur")
+                if self.event == componentKeys.allKeys["Pompe"]["OnOffManual"]:
+                    self.controlOnOffs("Pompe")
+                if self.event == componentKeys.allKeys["Temp"]["Sub"]:
+                    self.updateSlider("Temp", False)
+                if self.event == componentKeys.allKeys["Temp"]["Add"]:
+                    self.updateSlider("Temp", True)
+                if self.event == componentKeys.allKeys["Humidity"]["Sub"]:
+                    self.updateSlider("Humidity", False)
+                if self.event == componentKeys.allKeys["Humidity"]["Add"]:
+                    self.updateSlider("Humidity", True)
+                if self.event == "Soumettre":
+                    print(self.values)

@@ -3,7 +3,6 @@ from datetime import datetime
 TRESHOLD_TEMP_EXT = 15
 
 
-
 class ControlLogic:
     target_temp = 0
     range_temp = 0
@@ -48,7 +47,10 @@ class ControlLogic:
 
     def check_lights(self):
         open = False
-        if datetime.now().time() > self.time_light_open.time() and datetime.now().time() < self.time_light_close.time():
+        if (
+            datetime.now().time() > self.time_light_open.time()
+            and datetime.now().time() < self.time_light_close.time()
+        ):
             open = True
         return open
 
@@ -57,15 +59,15 @@ class ControlLogic:
 
     def check_temp(self, temp_int, temp_ext):
         if temp_int < (self.target_temp - self.range_temp):
-            #start_chauffage
+            # start_chauffage
             self.free_hum = False
         elif temp_int > (self.target_temp + self.range_temp):
             if temp_ext > TRESHOLD_TEMP_EXT:
-                #stop_chauffage
+                # stop_chauffage
                 pass
             else:
-                #start_vent
-                pass      
+                # start_vent
+                pass
             self.free_hum = False
         else:
             self.free_hum = True
@@ -73,10 +75,10 @@ class ControlLogic:
     def check_hum(self, hum_int, hum_ext):
         if self.free_hum:
             if hum_int < (self.target_hum - self.range_hum):
-                #stop_vent
+                # stop_vent
                 pass
             elif hum_int > (self.target_hum + self.range_hum):
-                #start_vent
+                # start_vent
                 if hum_int > (self.target_hum + self.range_hum + 0.15):
-                    #pulse_chauffage
+                    # pulse_chauffage
                     pass
