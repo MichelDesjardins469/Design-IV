@@ -9,6 +9,7 @@ class Interface:
     def __init__(self, components):
         self.layout = components.layout
         self.values = None
+        self.valueChanged = None
         self.event = None
         self.window = sg.Window(
             "Contrôle de la serre", self.layout, element_justification="c"
@@ -73,12 +74,18 @@ class Interface:
     def getValues(self):
         return self.values
 
+    def checkChangements():
+        valueChanged = self.valueChanged
+        self.valueChanged = False
+        return valueChanged
+
     def runInterface(self):
         while True:
             self.event, self.values = self.window.read(timeout=500)
             if self.event in (None, "Exit", "Cancel"):
                 break
             elif self.event == componentKeys.allKeys["Lumiere"]["TimerUsed"]:
+                self.valueChanged = True
                 self.controlTimers("Lumiere")
             elif self.event == componentKeys.allKeys["Moteur"]["TimerUsed"]:
                 self.controlTimers("Moteur")
