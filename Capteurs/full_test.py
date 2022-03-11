@@ -1,3 +1,4 @@
+
 import Adafruit_DHT as dht
 from time import sleep
 import serial
@@ -9,6 +10,9 @@ ser_co.flushInput()
 
 def getValeurs():
     h, t = dht.read_retry(dht.DHT22, DHT)
+    
+    h = round(h,2)
+    t = round(t,2)
 
     ser_co.flushInput()
     ser_co.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
