@@ -77,7 +77,7 @@ class HardwareAccess:
         if actions.vent_turn_off:
             self.control_fan(False)
             self.close_volet()
-        #TODO traitement water
+        # TODO traitement water
 
     def turn_on_water_pump(self):
         pass
@@ -93,9 +93,8 @@ class HardwareAccess:
             GPIO.output(PIN_VENT, GPIO.LOW)
             self.fan_on = False
 
-
     def open_volets(self):
-        self.volet_opened = True           
+        self.volet_opened = True
 
     def close_volet(self):
         self.volet_opened = False

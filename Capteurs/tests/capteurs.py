@@ -1,4 +1,3 @@
-
 import Adafruit_DHT as dht
 from time import sleep
 import serial
@@ -10,8 +9,8 @@ ser.flushInput()
 # when message recu:
 while True:
     h, t = dht.read_retry(dht.DHT22, DHT)
-    h = round(h,3)
-    t = round(t,3)
+    h = round(h, 3)
+    t = round(t, 3)
 
     ser.flushInput()
     ser.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
