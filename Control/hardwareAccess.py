@@ -29,6 +29,8 @@ class HardwareAccess:
     list_serials = []
     heat_on = False
     lights_on = False
+    volet_opened = False
+    fan_on = False
 
     def __init__(self):
         pass
@@ -62,13 +64,20 @@ class HardwareAccess:
             self.list_serials.append(ser)
 
     def traitement_actions(self, actions):
-        if actions == 1:
-            self.turn_on_heat()
-        elif actions == 2:
-            self.turn_on_lights()
-        elif actions == 3:
-            self.turn_on_heat()
-            self.turn_on_lights()
+        self.control_lights(actions.lights_turn_on)
+
+        if actions.heat_turn_on:
+            self.control_heat(True)
+        if actions.heat_turn_off:
+            self.control_heat(False)
+
+        if actions.vent_turn_on:
+            self.control_fan(True)
+            self.open_volets()
+        if actions.vent_turn_off:
+            self.control_fan(False)
+            self.close_volet()
+        #TODO traitement water
 
     def turn_on_water_pump(self):
         pass
@@ -76,14 +85,20 @@ class HardwareAccess:
     def turn_on_water_valve(self, section_id):
         pass
 
-    def control_fan(self):
-        pass
+    def control_fan(self, on):
+        if on:
+            GPIO.output(PIN_VENT, GPIO.HIGH)
+            self.fan_on = True
+        else:
+            GPIO.output(PIN_VENT, GPIO.LOW)
+            self.fan_on = False
+
 
     def open_volets(self):
-        pass
+        self.volet_opened = True           
 
     def close_volet(self):
-        pass
+        self.volet_opened = False
 
     def control_lights(self, on):
         if on:

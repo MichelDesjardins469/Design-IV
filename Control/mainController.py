@@ -17,10 +17,10 @@ def main():
         if changements:
             logic.update(changements)
         readings = hardware.get_lecture_sensors_test_random()
-        print("La température est de :" + str(readings.temp_int) + "˚C")
+        #print("La température est de :" + str(readings.temp_int) + "˚C")
         actions = logic.logic_loop(readings)
         hardware.traitement_actions(actions)
-        time.sleep(5)
+        time.sleep(1)
 
 
 def setup():
