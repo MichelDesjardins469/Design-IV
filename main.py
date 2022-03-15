@@ -1,15 +1,16 @@
-from hardwareAccess import HardwareAccess
+# from hardwareAccess import HardwareAccess
 from Utils.ValuesSaver import ValuesSaver
 from UI.Interface import Interface
 from UI.UI import Components
-from controlLogic import ControlLogic
+from Control.ControlLogic import ControlLogic
 import time
 import json
 from multiprocessing import Process
+import threading
 
-config_file = "config.json"
+config_file = "Utils/config.json"
 config = {}
-hardware = HardwareAccess()
+# hardware = HardwareAccess()
 logic = ControlLogic()
 valuesSaver = ValuesSaver(config_file)
 components = Components()
@@ -18,12 +19,13 @@ interface = Interface(components)
 
 def main():
     setup()
-    p1 = Process(target=interface.runInterface())
-    p1.start()
-    p2 = Process(target=actionLoop())
-    p2.start()
-    p1.join()
-    p2.join()
+    t1 = threading.Thread(target=interface.runInterface)
+    t2 = threading.Thread(target=actionLoop)
+    print("starting window")
+    t1.start()
+    t2.start()
+    t1.join()
+    t2.join()
 
 
 def actionLoop():
@@ -33,15 +35,16 @@ def actionLoop():
         if changements:
             logic.update(changements)
             valuesSaver.updateValues(interface.getValues())
-        readings = hardware.get_lecture_sensors_test_random()
+        # readings = hardware.get_lecture_sensors_test_random()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
-        actions = logic.logic_loop(readings)
-        hardware.traitement_actions(actions)
+        print("Bonjour")
+        # actions = logic.logic_loop(readings)
+        # hardware.traitement_actions(actions)
         time.sleep(1)
 
 
 def setup():
-    hardware.setup_hardware_access()
+    # hardware.setup_hardware_access()
     load_config()
 
 

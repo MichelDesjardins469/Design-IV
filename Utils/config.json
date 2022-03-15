@@ -1,0 +1,67 @@
+{
+    "Temperature": {
+        "LastDesiredValue": 1,
+        "rangeMin": 1,
+        "rangeMax": 1
+    },
+    "CO2": {
+        "LastMeasuredValue": 1
+    },
+    "Humidite": {
+        "LastDesiredValue": 1
+    },
+    "Machinerie": {
+        "Lumiere": {
+            "AllumeH": 1,
+            "AllumeM": 1,
+            "EteintH": 1,
+            "EteintM": 1,
+            "TimerUsed": 1,
+            "OnOffManual": 1
+        },
+        "Moteurs": {
+            "AllumeH": 1,
+            "AllumeM": 1,
+            "EteintH": 1,
+            "EteintM": 1,
+            "TimerUsed": 1,
+            "OnOffManual": 1
+        },
+        "Pompe": {
+            "AllumeH": 1,
+            "AllumeM": 1,
+            "EteintH": 1,
+            "EteintM": 1,
+            "TimerUsed": 1,
+            "OnOffManual": 1
+        },
+        "Vents": {
+            "AllumeH": 1,
+            "AllumeM": 1,
+            "EteintH": 1,
+            "EteintM": 1,
+            "TimerUsed": 1,
+            "OnOffManual": 1
+        }
+    },
+    "SliderTemp": 20.0,
+    "SliderHumid": 80.0,
+    "AllumePompeH": 8,
+    "AllumePompeM": 0,
+    "EteintPompeH": 16,
+    "EteintPompeM": 0,
+    "TimerPompeUsed": false,
+    "PompeOnOffManual": false,
+    "AllumeMoteurH": 8,
+    "AllumeMoteurM": 0,
+    "EteintMoteurH": 16,
+    "EteintMoteurM": 0,
+    "TimerMoteurUsed": false,
+    "MoteurOnOffManual": false,
+    "AllumeLumiereH": 8,
+    "AllumeLumiereM": 0,
+    "EteintLumiereH": 16,
+    "EteintLumiereM": 0,
+    "TimerLumiereUsed": false,
+    "LumiereOnOffManual": false
+}

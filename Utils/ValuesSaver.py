@@ -18,11 +18,3 @@ class ValuesSaver:
         json_object_formatted = json.dumps(self.values, indent=4)
         with open(self.filePath, "w") as outputFile:
             outputFile.write(json_object_formatted)
-
-
-saver = ValuesSaver("values.json")
-# This part is only used as an example
-# In use, the newDictValues will come directly from the interface
-saver.getValues()
-newDictValues = {"value1": "Hi", "value2": {"value3": "bonjour"}}
-saver.updateValues(newDictValues)

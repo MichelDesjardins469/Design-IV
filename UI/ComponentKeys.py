@@ -1,6 +1,3 @@
-import control
-
-
 tempKeys = {
     "Sub": "TempSub",
     "Slider": "SliderTemp",
