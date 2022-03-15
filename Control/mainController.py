@@ -1,21 +1,38 @@
 from hardwareAccess import HardwareAccess
-import controlLogic
+from Utils.ValuesSaver import ValuesSaver
+from UI.Interface import Interface
+from UI.UI import Components
+from controlLogic import ControlLogic
 import time
 import json
+from multiprocessing import Process
 
 config_file = "config.json"
+config = {}
 hardware = HardwareAccess()
-logic = controlLogic()
+logic = ControlLogic()
+valuesSaver = ValuesSaver(config_file)
+components = Components()
+interface = Interface(components)
 
 
 def main():
     setup()
+    p1 = Process(target=interface.runInterface())
+    p1.start()
+    p2 = Process(target=actionLoop())
+    p2.start()
+    p1.join()
+    p2.join()
 
+
+def actionLoop():
     while True:
         # ping_watchdog()
         changements = interface.checkChangements()
         if changements:
             logic.update(changements)
+            valuesSaver.updateValues(interface.getValues())
         readings = hardware.get_lecture_sensors_test_random()
         #print("La température est de :" + str(readings.temp_int) + "˚C")
         actions = logic.logic_loop(readings)
@@ -29,9 +46,7 @@ def setup():
 
 
 def load_config():
-    f = open(config_file)
-    config = json.load(f)
-    logic.load_config(config)
+    config = valuesSaver.getValues()
 
 
 def ping_watchdog():

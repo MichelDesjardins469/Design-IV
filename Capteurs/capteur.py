@@ -10,7 +10,7 @@ DHT = 4
 
 while True:
     h, t = dht.read_retry(dht.DHT22, DHT)
-    # print("Temp={0:0.1f}*C Humidity={1:0.1f}%".format(t,h))
+    print("Temp={0:0.1f}*C Humidity={1:0.1f}%".format(t,h))
     ser.flushInput()
     ser.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
     time.sleep(1)

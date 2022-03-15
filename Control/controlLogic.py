@@ -8,7 +8,6 @@ actions = namedtuple(
     "actions", "heat_turn_on heat_turn_off vent_turn_on vent_turn_off lights_turn_on water_1_on water_2_on water_3_on water_4_on heat_pulse_on"
 )
 
-
 class ControlLogic:
     target_temp = 0
     range_temp = 0
@@ -81,7 +80,10 @@ class ControlLogic:
 
     def check_lights(self):
         open = False
-        if datetime.now().time() > self.time_light_open.time() and datetime.now().time() < self.time_light_close.time():
+        if (
+            datetime.now().time() > self.time_light_open.time()
+            and datetime.now().time() < self.time_light_close.time()
+        ):
             open = True
         return open
 
@@ -112,17 +114,17 @@ class ControlLogic:
     def check_temp(self, temp_int, temp_ext):
         retour = 0
         if temp_int < (self.target_temp - self.range_temp):
-            #start_chauffage
-            #stop_vent
+            # start_chauffage
+            # stop_vent
             retour = 1
             self.free_hum = False
         elif temp_int > (self.target_temp + self.range_temp):
             if temp_ext > TRESHOLD_TEMP_EXT:
-                #stop_chauffage
+                # stop_chauffage
                 retour = 2
                 pass
             else:
-                #start_vent
+                # start_vent
                 retour = 3
                 pass      
             self.free_hum = False
@@ -134,14 +136,15 @@ class ControlLogic:
         retour = 0
         if self.free_hum:
             if hum_int < (self.target_hum - self.range_hum):
-                #stop_vent
+                # stop_vent
                 retour = 1
                 pass
             elif hum_int > (self.target_hum + self.range_hum):
-                #start_vent
+                # start_vent
                 retour = 2
                 if hum_int > (self.target_hum + self.range_hum + TRESHOLD_TOO_HUM):
-                    #pulse_chauffage
+                    # pulse_chauffage
                     retour = 3
                     pass
         return retour
+
