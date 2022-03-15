@@ -31,6 +31,8 @@ def main():
 def actionLoop():
     while True:
         # ping_watchdog()
+        if interface.windowDown:
+            break
         changements = interface.checkChangements()
         if changements:
             logic.update(changements)

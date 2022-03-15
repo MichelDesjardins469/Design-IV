@@ -9,6 +9,7 @@ class Interface:
         self.layout = components.layout
         self.values = None
         self.valueChanged = None
+        self.windowDown = False
         self.event = None
         self.window = sg.Window(
             "Contrôle de la serre", self.layout, element_justification="c"
@@ -18,6 +19,7 @@ class Interface:
         self.layout = None
         self.values = None
         self.valueChanged = None
+        self.windowDown = None
         self.event = None
         self.window = None
 
@@ -90,6 +92,7 @@ class Interface:
         while True:
             self.event, self.values = self.window.read(timeout=500)
             if self.event in (None, "Exit", "Cancel"):
+                self.windowDown = True
                 break
             else:
                 self.valueChanged = True
