@@ -1,27 +1,29 @@
-#import Adafruit_DHT as dht
+
+import Adafruit_DHT as dht
 from time import sleep
 import serial
 
 DHT = 4
-#ser_co = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.5)
-#ser_co.flushInput()
+ser_co = serial.Serial("/dev/serial0", baudrate=9600, timeout=0.5)
+ser_co.flushInput()
 
 
 def getValeurs():
-    #h, t = dht.read_retry(dht.DHT22, DHT)
-    h,t=1
+    h, t = dht.read_retry(dht.DHT22, DHT)
+    
+    h = round(h,2)
+    t = round(t,2)
+
+    ser_co.flushInput()
+    ser_co.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
+    resp = ser_co.read(7)
     co2 = -1
 
     try:
-        i = 1/0
-        #ser_co.flushInput()
-        #ser_co.write(b"\xFE\x44\x00\x08\x02\x9F\x25")
-        #resp = ser_co.read(7)
-        #high = resp[3]
-        #low = resp[4]
-        #co2 = (high * 256) + low
-    except:
-        print(t,h,-1)
+        high = resp[3]
+        low = resp[4]
+        co2 = (high * 256) + low
+    except TypeError:
         return (t, h, -1)
 
     # envoie info:
@@ -32,7 +34,7 @@ sleep(30)
 
 
 def lecture():
-    sleep(3)
+    time.sleep(3)
     return "THIS IS A TEST\n"
 
 

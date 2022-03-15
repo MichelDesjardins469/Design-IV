@@ -17,8 +17,7 @@ LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
 # pour fins de démonstrations
-heat_on = False
-lights_on = False
+
 
 complete_readings = namedtuple(
     "complete_readings", "temp_int temp_ext hum_int hum_ext CO2_int"
@@ -28,6 +27,10 @@ station_reading = namedtuple("station_reading", "temp hum CO2")
 
 class HardwareAccess:
     list_serials = []
+    heat_on = False
+    lights_on = False
+    volet_opened = False
+    fan_on = False
 
     def __init__(self):
         pass
@@ -61,13 +64,20 @@ class HardwareAccess:
             self.list_serials.append(ser)
 
     def traitement_actions(self, actions):
-        if actions == 1:
-            self.turn_on_heat()
-        elif actions == 2:
-            self.turn_on_lights()
-        elif actions == 3:
-            self.turn_on_heat()
-            self.turn_on_lights()
+        self.control_lights(actions.lights_turn_on)
+
+        if actions.heat_turn_on:
+            self.control_heat(True)
+        if actions.heat_turn_off:
+            self.control_heat(False)
+
+        if actions.vent_turn_on:
+            self.control_fan(True)
+            self.open_volets()
+        if actions.vent_turn_off:
+            self.control_fan(False)
+            self.close_volet()
+        #TODO traitement water
 
     def turn_on_water_pump(self):
         pass
@@ -75,29 +85,36 @@ class HardwareAccess:
     def turn_on_water_valve(self, section_id):
         pass
 
-    def turn_on_co2(self):
-        pass
+    def control_fan(self, on):
+        if on:
+            GPIO.output(PIN_VENT, GPIO.HIGH)
+            self.fan_on = True
+        else:
+            GPIO.output(PIN_VENT, GPIO.LOW)
+            self.fan_on = False
 
-    def turn_on_fan(self):
-        pass
 
     def open_volets(self):
-        pass
+        self.volet_opened = True           
 
     def close_volet(self):
-        pass
+        self.volet_opened = False
 
-    def turn_on_lights(self):
-        global lights_on
-        if not lights_on:
-            print("lumières activées")
+    def control_lights(self, on):
+        if on:
+            GPIO.output(PIN_LIGHTS, GPIO.HIGH)
+            self.lights_on = True
+        else:
+            GPIO.output(PIN_LIGHTS, GPIO.LOW)
+            self.lights_on = False
 
-            lights_on = True
-
-    def turn_on_heat(self):
-        global heat_on
-        heat_on = True
-        print("chauffage activé")
+    def control_heat(self, on):
+        if on:
+            GPIO.output(PIN_HEATER, GPIO.HIGH)
+            self.heat_on = True
+        else:
+            GPIO.output(PIN_HEATER, GPIO.LOW)
+            self.heat_on = False
 
     def get_lecture_sensors(self):
 
@@ -109,7 +126,7 @@ class HardwareAccess:
                 print("couldn't not contact one station")
                 results.append(None)
             else:
-                results.append(reading)
+                results.append(reading.decode("UtF-8"))
 
         reading_int_1 = self.get_lecture_interieur_1()
         reading_int_2 = self.get_lecture_interieur_2()
@@ -133,7 +150,7 @@ class HardwareAccess:
         return station_reading(0, 0, 0)
 
     def get_lecture_sensors_test_random(self):
-        if heat_on or np.random.random_integers(0, 10) <= 8:
+        if self.heat_on or np.random.random_integers(0, 10) <= 8:
             temp_int = np.random.normal(23, 2)
         else:
             temp_int = np.random.normal(18, 2)
