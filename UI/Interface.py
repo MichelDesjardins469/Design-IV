@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from UI import ComponentKeys
+from UI import ComponentKeys, UI
 
 sg.theme("DarkTeal12")
 
@@ -10,6 +10,7 @@ class Interface:
         self.values = None
         self.valueChanged = None
         self.windowDown = False
+        self.CO2Danger = False
         self.event = None
         self.window = sg.Window(
             "Contrôle de la serre", self.layout, element_justification="c"
@@ -88,15 +89,26 @@ class Interface:
             self.valueChanged = False
         return valueChangedTemp
 
+    def CO2NiveauCritiquePopup(self):
+        self.CO2Danger = True
+
     def runInterface(self):
+        timeCount = 0
         while True:
             self.event, self.values = self.window.read(timeout=500)
+            timeCount += 1
+            if self.CO2Danger and timeCount > 7200:
+                event, values = UI.CO2NiveauCritiquePopup()
+                self.CO2Danger = False
+                timeCount = 0
+            # main logic from down here
             if self.event in (None, "Exit", "Cancel"):
                 self.windowDown = True
                 break
             else:
                 self.valueChanged = True
                 if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
+                    # sg.popup('Bonjour')
                     self.valueChanged = True
                     self.controlTimers("Lumiere")
                 if self.event == ComponentKeys.allKeys["Moteur"]["TimerUsed"]:

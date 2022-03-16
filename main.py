@@ -5,8 +5,7 @@ from UI.UI import Components
 from Control.ControlLogic import ControlLogic
 import time
 import json
-from multiprocessing import Process
-import threading
+from threading import Thread
 
 config_file = "Utils/config.json"
 config = {}
@@ -19,9 +18,8 @@ interface = Interface(components)
 
 def main():
     setup()
-    t1 = threading.Thread(target=interface.runInterface)
-    t2 = threading.Thread(target=actionLoop)
-    print("starting window")
+    t1 = Thread(target=interface.runInterface, args=(q,))
+    t2 = Thread(target=actionLoop)
     t1.start()
     t2.start()
     t1.join()
@@ -29,6 +27,7 @@ def main():
 
 
 def actionLoop():
+    CO2Level = 0
     while True:
         # ping_watchdog()
         if interface.windowDown:
@@ -37,9 +36,12 @@ def actionLoop():
         if changements:
             logic.update(changements)
             valuesSaver.updateValues(interface.getValues())
+        CO2Level += 1
+        if CO2Level > 5:
+            interface.CO2NiveauCritiquePopup()
+            CO2Level = 0
         # readings = hardware.get_lecture_sensors_test_random()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
-        print("Bonjour")
         # actions = logic.logic_loop(readings)
         # hardware.traitement_actions(actions)
         time.sleep(1)

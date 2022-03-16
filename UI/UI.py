@@ -37,6 +37,17 @@ def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
     ]
 
 
+def CO2NiveauCritiquePopup():
+    return sg.Window(
+        "Avertissement du CO2",
+        [
+            [sg.T("Niveau de CO2 critique!")],
+            [sg.B("OK", button_color="red", auto_size_button=True)],
+        ],
+        element_justification="c",
+    ).read(close=True)
+
+
 def nouvelAppareilPopup():
     return [sg.OptionMenu(["Unité de chauffage", "Ventilateur", "Lumière"], s=(15, 2))]
 
@@ -179,47 +190,3 @@ class Components:
             ],
             [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
         ]
-
-    def controlTimers(componentKey):
-        if values[ComponentKeys.allKeys[componentKey]["TimerUsed"]] == True:
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(
-                disabled=False
-            )
-            window[ComponentKeys.allKeys[componentKey]["AllumeH"]].update(disabled=True)
-            window[ComponentKeys.allKeys[componentKey]["AllumeM"]].update(disabled=True)
-            window[ComponentKeys.allKeys[componentKey]["EteintH"]].update(disabled=True)
-            window[ComponentKeys.allKeys[componentKey]["EteintM"]].update(disabled=True)
-        else:
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(
-                disabled=True
-            )
-            window[ComponentKeys.allKeys[componentKey]["AllumeH"]].update(
-                disabled=False
-            )
-            window[ComponentKeys.allKeys[componentKey]["AllumeM"]].update(
-                disabled=False
-            )
-            window[ComponentKeys.allKeys[componentKey]["EteintH"]].update(
-                disabled=False
-            )
-            window[ComponentKeys.allKeys[componentKey]["EteintM"]].update(
-                disabled=False
-            )
-
-    def controlOnOffs(componentKey):
-        if values[ComponentKeys.allKeys[componentKey]["OnOffManual"]] == True:
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(text="On")
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(True)
-        else:
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(
-                text="Off"
-            )
-            window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(False)
-
-    def updateSlider(componentKey, Add):
-        if not Add:
-            newValue = values[ComponentKeys.allKeys[componentKey]["Slider"]] - 0.5
-            window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
-        else:
-            newValue = values[ComponentKeys.allKeys[componentKey]["Slider"]] + 0.5
-            window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
