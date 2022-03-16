@@ -7,6 +7,8 @@ tempKeys = {
 
 humidityKeys = {"Sub": "HumidSub", "Slider": "SliderHumid", "Add": "HumidAdd"}
 
+CO2Keys = {"Sub": "CO2Sub", "Slider": "SliderCO2", "Add": "CO2Add"}
+
 ventsKeys = {
     "AllumeH": "AllumeVentsH",
     "AllumeM": "AllumeVentsM",
@@ -46,6 +48,7 @@ lumiereKeys = {
 allKeys = {
     "Temp": tempKeys,
     "Humidity": humidityKeys,
+    "CO2": CO2Keys,
     "Pompe": pompeKeys,
     "Moteur": moteurKeys,
     "Lumiere": lumiereKeys,

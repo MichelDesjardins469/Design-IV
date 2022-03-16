@@ -44,8 +44,8 @@
             "OnOffManual": 1
         }
     },
-    "SliderTemp": 20.0,
-    "SliderHumid": 80.0,
+    "SliderTemp": 19.0,
+    "SliderHumid": 76.0,
     "AllumePompeH": 8,
     "AllumePompeM": 0,
     "EteintPompeH": 16,
@@ -63,5 +63,6 @@
     "EteintLumiereH": 16,
     "EteintLumiereM": 0,
     "TimerLumiereUsed": false,
-    "LumiereOnOffManual": false
+    "LumiereOnOffManual": false,
+    "SliderCO2": 580.0
 }

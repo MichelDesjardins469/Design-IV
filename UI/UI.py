@@ -97,7 +97,7 @@ class Components:
             Slider2button(
                 "Température désirée (°C) ",
                 ComponentKeys.allKeys["Temp"]["Sub"],
-                "SliderTemp",
+                ComponentKeys.allKeys["Temp"]["Slider"],
                 ComponentKeys.allKeys["Temp"]["Add"],
                 0,
                 35,
@@ -106,11 +106,20 @@ class Components:
             Slider2button(
                 "Humidité désirée(%)",
                 ComponentKeys.allKeys["Humidity"]["Sub"],
-                "SliderHumid",
+                ComponentKeys.allKeys["Humidity"]["Slider"],
                 ComponentKeys.allKeys["Humidity"]["Add"],
                 0,
                 100,
                 80,
+            ),
+            Slider2button(
+                "Taux de CO2 désiré (ppm)",
+                ComponentKeys.allKeys["CO2"]["Sub"],
+                ComponentKeys.allKeys["CO2"]["Slider"],
+                ComponentKeys.allKeys["CO2"]["Add"],
+                400,
+                1000,
+                600,
             ),
         ]
         self.frame_hours_control_pompe = controleHeures(

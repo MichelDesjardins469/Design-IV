@@ -72,12 +72,16 @@ class Interface:
                 False
             )
 
-    def updateSlider(self, componentKey, Add):
+    def updateSlider(self, componentKey, Add, increment):
         if not Add:
-            newValue = self.values[ComponentKeys.allKeys[componentKey]["Slider"]] - 0.5
+            newValue = (
+                self.values[ComponentKeys.allKeys[componentKey]["Slider"]] - increment
+            )
             self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
         else:
-            newValue = self.values[ComponentKeys.allKeys[componentKey]["Slider"]] + 0.5
+            newValue = (
+                self.values[ComponentKeys.allKeys[componentKey]["Slider"]] + increment
+            )
             self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
 
     def getValues(self):
@@ -124,13 +128,17 @@ class Interface:
                     self.controlOnOffs("Moteur")
                 if self.event == ComponentKeys.allKeys["Pompe"]["OnOffManual"]:
                     self.controlOnOffs("Pompe")
+                if self.event == ComponentKeys.allKeys["CO2"]["Sub"]:
+                    self.updateSlider("CO2", False, 10)
+                if self.event == ComponentKeys.allKeys["CO2"]["Add"]:
+                    self.updateSlider("CO2", True, 10)
                 if self.event == ComponentKeys.allKeys["Temp"]["Sub"]:
-                    self.updateSlider("Temp", False)
+                    self.updateSlider("Temp", False, 0.5)
                 if self.event == ComponentKeys.allKeys["Temp"]["Add"]:
-                    self.updateSlider("Temp", True)
+                    self.updateSlider("Temp", True, 0.5)
                 if self.event == ComponentKeys.allKeys["Humidity"]["Sub"]:
-                    self.updateSlider("Humidity", False)
+                    self.updateSlider("Humidity", False, 2)
                 if self.event == ComponentKeys.allKeys["Humidity"]["Add"]:
-                    self.updateSlider("Humidity", True)
+                    self.updateSlider("Humidity", Truea, 2)
                 if self.event == "Soumettre":
                     print(self.values)

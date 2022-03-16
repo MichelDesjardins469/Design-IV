@@ -18,7 +18,7 @@ interface = Interface(components)
 
 def main():
     setup()
-    t1 = Thread(target=interface.runInterface, args=(q,))
+    t1 = Thread(target=interface.runInterface)
     t2 = Thread(target=actionLoop)
     t1.start()
     t2.start()
