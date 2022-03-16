@@ -20,7 +20,7 @@ LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
 complete_readings = namedtuple(
-    "complete_readings", "temp_int temp_ext hum_int hum_ext CO2_int"
+    "complete_readings", "temp_int_1 temp_int_2 temp_ext hum_int_1 hum_int_2 hum_ext CO2_int_1 CO2_int_2"
 )
 station_reading = namedtuple("station_reading", "temp hum CO2")
 
@@ -117,36 +117,25 @@ class HardwareAccess:
 
     def get_lecture_sensors(self):
 
-        results = []
+        results_int = []
+        result_ext = []
         for ser in self.list_serials:
             ser.write(b"run\n")
             reading = ser.readline()
             if reading == b"":
                 print("couldn't not contact one station")
-                results.append(None)
+                # results_int.append(None)
             else:
-                results.append(reading.decode("UtF-8"))
-
-        reading_int_1 = self.get_lecture_interieur_1()
-        reading_int_2 = self.get_lecture_interieur_2()
-        reading_ext = self.get_lecture_exterieur()
-
-        temp_int = np.mean([reading_int_1.temp, reading_int_2.temp])
-        hum_int = np.mean([reading_int_1.hum, reading_int_2.hum])
-        CO2_int = np.mean([reading_int_1.CO2, reading_int_2.CO2])
-
+                splits = reading.decode('utf-8').split(":")
+                if splits[2] == -1:
+                    result_ext = splits
+                else:
+                    results_int.append(splits)
+                
         return complete_readings(
-            temp_int, reading_ext.temp, hum_int, reading_ext.hum, CO2_int
+            results_int[0][0], results_int[1][0], result_ext[0], results_int[0][1], results_int[1][1], result_ext[1], 
+            results_int[0][2], results_int[1][2]
         )
-
-    def get_lecture_interieur_1(self):
-        return station_reading(0, 0, 0)
-
-    def get_lecture_interieur_2(self):
-        return station_reading(0, 0, 0)
-
-    def get_lecture_exterieur(self):
-        return station_reading(0, 0, 0)
 
     def get_lecture_sensors_test_random(self):
         if self.heat_on or np.random.random_integers(0, 10) <= 8:
@@ -154,5 +143,5 @@ class HardwareAccess:
         else:
             temp_int = np.random.normal(18, 2)
 
-        readings = complete_readings(temp_int, 0, 0, 0, 0)
+        readings = complete_readings(temp_int, temp_int, 0, 0, 0, 0, 0, 0)
         return readings

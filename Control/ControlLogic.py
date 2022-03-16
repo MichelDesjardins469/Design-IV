@@ -1,5 +1,6 @@
 from datetime import datetime
 from collections import namedtuple
+import numpy as np
 
 TRESHOLD_TEMP_EXT = 15
 TRESHOLD_TOO_HUM = 0.15
@@ -45,13 +46,15 @@ class ControlLogic:
         pass
 
     def logic_loop(self, sensorReadings):
+        mean_temp = np.mean([sensorReadings.temp_int_1, sensorReadings.temp_int_2])
+        mean_hum = np.mean([sensorReadings.hum_int_1, sensorReadings.hum_int_2])
         retour_lights = self.check_lights()
         retour_water_1 = self.check_water(1)
         retour_water_2 = self.check_water(2)
         retour_water_3 = self.check_water(3)
         retour_water_4 = self.check_water(4)
-        id_temp = self.check_temp(sensorReadings.temp_int, sensorReadings.temp_ext)
-        id_hum = self.check_hum(sensorReadings.hum_int, sensorReadings.hum_ext)
+        id_temp = self.check_temp(mean_temp, sensorReadings.temp_ext)
+        id_hum = self.check_hum(mean_hum, sensorReadings.hum_ext)
         retour_heat_on = False
         retour_heat_off = False
         retour_vent_on = False
