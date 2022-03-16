@@ -2,6 +2,7 @@ import numpy as np
 from collections import namedtuple
 import serial
 import RPi.GPIO as GPIO
+import threading
 
 PIN_HEATER = 0
 PIN_VOLETS = 0
@@ -78,6 +79,7 @@ class HardwareAccess:
             self.control_fan(False)
             self.close_volet()
         # TODO traitement water
+        # TODO traitement pulse
 
     def turn_on_water_pump(self):
         pass
@@ -95,9 +97,21 @@ class HardwareAccess:
 
     def open_volets(self):
         self.volet_opened = True
+        t = threading.Thread(target=self.open_volets_thread)
+        t.start()
+
+    def open_volets_thread(self):
+        # TODO do the open
+        return True
 
     def close_volet(self):
         self.volet_opened = False
+        t = threading.Thread(target=self.close_volets_thread)
+        t.start()
+
+    def close_volets_thread(self):
+        # TODO do the close
+        return True
 
     def control_lights(self, on):
         if on:
@@ -136,6 +150,9 @@ class HardwareAccess:
             results_int[0][0], results_int[1][0], result_ext[0], results_int[0][1], results_int[1][1], result_ext[1], 
             results_int[0][2], results_int[1][2]
         )
+
+    def contact_sensor(self, ser):
+        pass
 
     def get_lecture_sensors_test_random(self):
         if self.heat_on or np.random.random_integers(0, 10) <= 8:
