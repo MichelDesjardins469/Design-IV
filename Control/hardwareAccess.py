@@ -34,7 +34,7 @@ class HardwareAccess:
     fan_on = False
 
     def __init__(self):
-        pass
+        self._key_lock = threading.Lock()
 
     def setup_hardware_access(self):
         self.setup_gpios()
@@ -151,8 +151,37 @@ class HardwareAccess:
             results_int[0][2], results_int[1][2]
         )
 
-    def contact_sensor(self, ser):
-        pass
+    def get_lecture_sensors_threaded(self):
+        results_int = []
+        result_ext = []
+        threads = []
+        for ser in self.list_serials:
+            t = threading.Thread(target=self.contact_sensor, args=(ser, results_int, result_ext,))
+            threads.append(t)
+            t.start()
+        
+        for t in threads:
+            t.join()
+                
+        return complete_readings(
+            results_int[0][0], results_int[1][0], result_ext[0][0], results_int[0][1], results_int[1][1], result_ext[1], 
+            results_int[0][2], results_int[1][2]
+        )
+
+    def contact_sensor(self, serial, output_int, output_ext):
+        serial.write(b"run\n")
+        reading = serial.readline()
+        if reading == b"":
+            print("couldn't not contact one station")
+            # results_int.append(None)
+        else:
+            splits = reading.decode('utf-8').split(":")
+            if splits[2] == -1:
+                output_ext.append(splits)
+            else:
+                self._key_lock.acquire()
+                output_int.append(splits)
+                self._key_lock.release()
 
     def get_lecture_sensors_test_random(self):
         if self.heat_on or np.random.random_integers(0, 10) <= 8:
