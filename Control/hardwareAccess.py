@@ -1,3 +1,4 @@
+from ast import Pass
 import numpy as np
 from collections import namedtuple
 import serial
@@ -13,6 +14,8 @@ PIN_VALVE_1 = 0
 PIN_VALVE_2 = 0
 PIN_VALVE_3 = 0
 PIN_VALVE_4 = 0
+FREQ_PWM = 0.0083333 # dure 2 minute
+DUTY_CYCLE = 50
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
@@ -32,11 +35,13 @@ class HardwareAccess:
     lights_on = False
     volet_opened = False
     fan_on = False
+    pulse_on = False
 
     def __init__(self):
-        self._key_lock = threading.Lock()
+        pass
 
     def setup_hardware_access(self):
+        self._key_lock = threading.Lock()
         self.setup_gpios()
         self.setup_serials()
 
@@ -51,6 +56,7 @@ class HardwareAccess:
         GPIO.setup(PIN_VALVE_2, GPIO.OUT)
         GPIO.setup(PIN_VALVE_3, GPIO.OUT)
         GPIO.setup(PIN_VALVE_4, GPIO.OUT)
+        self.pwm = GPIO.pwm(PIN_HEATER, FREQ_PWM)
 
     def setup_serials(self):
         for port in LIST_PORTS:
@@ -67,6 +73,13 @@ class HardwareAccess:
     def traitement_actions(self, actions):
         self.control_lights(actions.lights_turn_on)
 
+        if actions.heat_pulse_on and not self.pulse_on:
+            self.pwm.start(DUTY_CYCLE)
+            self.pulse_on = True
+        else :
+            self.pwm.stop()
+            self.pulse_on = False
+
         if actions.heat_turn_on:
             self.control_heat(True)
         if actions.heat_turn_off:
@@ -79,7 +92,6 @@ class HardwareAccess:
             self.control_fan(False)
             self.close_volet()
         # TODO traitement water
-        # TODO traitement pulse
 
     def turn_on_water_pump(self):
         pass
