@@ -60,23 +60,21 @@ class ControlLogic:
         retour_vent_on = False
         retour_vent_off = False
         retour_pulse_on = False
-        match id_temp:
-            case 1:
-                retour_heat_on = True
-                retour_vent_off = True
-            case 2:
-                retour_heat_off = True
-            case 3:
-                retour_vent_on = True
+        if id_temp == 1:
+            retour_heat_on = True
+            retour_vent_off = True
+        elif id_temp == 2:
+            retour_heat_off = True
+        elif id_temp == 3:
+            retour_vent_on = True
 
-        match id_hum:
-            case 1:
-                retour_vent_off = True
-            case 2:
-                retour_vent_on = True
-            case 3:
-                retour_vent_on = True
-                retour_pulse_on = True
+        if id_hum == 1:
+            retour_vent_off = True
+        elif id_hum == 2:
+            retour_vent_on = True
+        elif id_hum == 3:
+            retour_vent_on = True
+            retour_pulse_on = True
                 
         return actions(retour_heat_on, retour_heat_off, retour_vent_on, retour_vent_off, 
                         retour_lights, retour_water_1, retour_water_2,  retour_water_3,  retour_water_4, retour_pulse_on)        
@@ -93,23 +91,23 @@ class ControlLogic:
     def check_water(self, id):
         now = datetime.now.time()
         retour = False
-        match id:
-            case 1:
-                if now > self.next_water_1:
-                    retour = True
-                    self.next_water_1 = self.next_water_1 + datetime.timedelta(hours=self.freq_water_1)
-            case 2:
-                if now > self.next_water_2:
-                    retour = True
-                    self.next_water_2 = self.next_water_2 + datetime.timedelta(hours=self.freq_water_2)
-            case 3:
-                if now > self.next_water_3:
-                    retour = True
-                    self.next_water_3 = self.next_water_3 + datetime.timedelta(hours=self.freq_water_3)
-            case 4:
-                if now > self.next_water_4:
-                    retour = True
-                    self.next_water_4 = self.next_water_4 + datetime.timedelta(hours=self.freq_water_4)
+
+        if id ==  1:
+            if now > self.next_water_1:
+                retour = True
+                self.next_water_1 = self.next_water_1 + datetime.timedelta(hours=self.freq_water_1)
+        elif id ==  2:
+            if now > self.next_water_2:
+                retour = True
+                self.next_water_2 = self.next_water_2 + datetime.timedelta(hours=self.freq_water_2)
+        elif id ==  3:
+            if now > self.next_water_3:
+                retour = True
+                self.next_water_3 = self.next_water_3 + datetime.timedelta(hours=self.freq_water_3)
+        elif id ==  4:
+            if now > self.next_water_4:
+                retour = True
+                self.next_water_4 = self.next_water_4 + datetime.timedelta(hours=self.freq_water_4)
         return retour
 
 
