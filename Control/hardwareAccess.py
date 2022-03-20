@@ -4,6 +4,7 @@ from collections import namedtuple
 import serial
 import RPi.GPIO as GPIO
 import threading
+import time
 
 PIN_HEATER = 0
 PIN_VOLETS = 0
@@ -16,6 +17,7 @@ PIN_VALVE_3 = 0
 PIN_VALVE_4 = 0
 FREQ_PWM = 0.0083333  # dure 2 minute
 DUTY_CYCLE = 50
+WATER_DURATION = 0
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
@@ -98,13 +100,41 @@ class HardwareAccess:
         if actions.vent_turn_off:
             self.control_fan(False)
             self.close_volet()
-        # TODO traitement water
 
-    def turn_on_water_pump(self):
-        pass
+        water_ids = []
+        if(actions.water_1_on):
+            water_ids.append(1)
+        if(actions.water_2_on):
+            water_ids.append(2)
+        if(actions.water_3_on):
+            water_ids.append(3)
+        if(actions.water_4_on):
+            water_ids.append(4)
+        
+        if water_ids.size() != 0:
+            self.watering(water_ids)
+
+    def watering(self, section_ids):
+        t = threading.Thread(target=self.watering_thread, args=(section_ids))
+        t.start()
+
+    def watering_thread(self, section_ids):
+        self.turn_on_water_pump(True)
+        for id in section_ids:
+            self.turn_on_water_valve(id)
+        self.turn_on_water_pump(False)
+
+    def turn_on_water_pump(self, on):
+        if on:
+            GPIO.output(PIN_WATER_PUMP, GPIO.HIGH)
+        else:
+            GPIO.output(PIN_WATER_PUMP, GPIO.LOW)
 
     def turn_on_water_valve(self, section_id):
-        pass
+        # open valve
+        time.sleep(WATER_DURATION)
+        # close valve
+
 
     def control_fan(self, on):
         if on:
