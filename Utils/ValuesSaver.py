@@ -6,6 +6,10 @@ class ValuesSaver:
         self.filePath = filePath
         self.values = None
 
+    def __del__(self):
+        self.filePath = None
+        self.values = None
+
     # Always need to call this first in order to read the file
     def getValues(self):
         with open(self.filePath, "r") as openedFile:

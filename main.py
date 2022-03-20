@@ -10,7 +10,7 @@ from threading import Thread
 config_file = "Utils/config.json"
 config = {}
 # hardware = HardwareAccess()
-logic = ControlLogic()
+logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file)
 components = Components()
 interface = Interface(components)
@@ -34,7 +34,7 @@ def actionLoop():
             break
         changements = interface.checkChangements()
         if changements:
-            logic.update(changements)
+            # logic.update(changements)
             valuesSaver.updateValues(interface.getValues())
         CO2Level += 1
         if CO2Level > 5:
@@ -44,7 +44,7 @@ def actionLoop():
         # print("La température est de :" + str(readings.temp_int) + "˚C")
         # actions = logic.logic_loop(readings)
         # hardware.traitement_actions(actions)
-        time.sleep(1)
+        time.sleep(0.5)
 
 
 def setup():
@@ -54,6 +54,7 @@ def setup():
 
 def load_config():
     config = valuesSaver.getValues()
+    logic = ControlLogic(config)
 
 
 def ping_watchdog():

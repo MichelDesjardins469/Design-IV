@@ -2,10 +2,16 @@ tempKeys = {
     "Sub": "TempSub",
     "Slider": "SliderTemp",
     "Add": "TempAdd",
+    "Range": "TempRange",
     "StateImage": "TempStateImage",
 }
 
-humidityKeys = {"Sub": "HumidSub", "Slider": "SliderHumid", "Add": "HumidAdd"}
+humidityKeys = {
+    "Sub": "HumidSub",
+    "Slider": "SliderHumid",
+    "Add": "HumidAdd",
+    "Range": "HumidRange",
+}
 
 CO2Keys = {"Sub": "CO2Sub", "Slider": "SliderCO2", "Add": "CO2Add"}
 
@@ -19,11 +25,10 @@ ventsKeys = {
     "StateImage": "VentsStateImage",
 }
 pompeKeys = {
-    "AllumeH": "AllumePompeH",
-    "AllumeM": "AllumePompeM",
-    "EteintH": "EteintPompeH",
-    "EteintM": "EteintPompeM",
-    "TimerUsed": "TimerPompeUsed",
+    "Zone": "ZoneChoisie",
+    "Sub": "PompeSub",
+    "Slider": "SliderPompe",
+    "Add": "PompeAdd",
     "OnOffManual": "PompeOnOffManual",
     "StateImage": "PompeStateImage",
 }

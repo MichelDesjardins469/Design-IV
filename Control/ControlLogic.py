@@ -1,46 +1,67 @@
 from datetime import datetime
 from collections import namedtuple
 import numpy as np
+from UI import ComponentKeys
 
 TRESHOLD_TEMP_EXT = 15
 TRESHOLD_TOO_HUM = 0.15
 
 actions = namedtuple(
-    "actions", "heat_turn_on heat_turn_off vent_turn_on vent_turn_off lights_turn_on water_1_on water_2_on water_3_on water_4_on heat_pulse_on"
+    "actions",
+    "heat_turn_on heat_turn_off vent_turn_on vent_turn_off lights_turn_on water_1_on water_2_on water_3_on water_4_on heat_pulse_on",
 )
 
-class ControlLogic:
-    target_temp = 0
-    range_temp = 0
-    target_hum = 0
-    range_hum = 0
-    time_light_open = 0
-    time_light_close = 0
-    freq_water_1 = 0
-    next_water_1 = 0
-    freq_water_2 = 0
-    next_water_2 = 0
-    freq_water_3 = 0
-    next_water_3 = 0
-    freq_water_4 = 0
-    next_water_4 = 0
-    free_hum = False
 
-    def load_config(self, config):
-        self.target_temp = config.target_temp
-        self.range_temp = config.range_temp
-        self.target_hum = config.target_hum
-        self.range_hum = config.range_hum
-        self.time_light_open = config.time_light_open
-        self.time_light_close = config.time_light_close
-        self.freq_water_1 = config.freq_water_1
-        self.next_water_1 = config.next_water_1
-        self.freq_water_2 = config.freq_water_2
-        self.next_water_2 = config.next_water_2
-        self.freq_water_3 = config.freq_water_3
-        self.next_water_3 = config.next_water_3
-        self.freq_water_4 = config.freq_water_4
-        self.next_water_4 = config.next_water_4
+class ControlLogic:
+    def __init__(self, config):
+        self.target_temp = config[ComponentKeys.allKeys["Temp"]["Slider"]]
+        self.range_temp = config[ComponentKeys.allKeys["Temp"]["Range"]]
+        self.target_hum = config[ComponentKeys.allKeys["Humidity"]["Slider"]]
+        self.range_hum = config[ComponentKeys.allKeys["Humidity"]["Range"]]
+        # create a time object
+        self.time_light_open = datetime(
+            datetime.now().year,
+            datetime.now().month,
+            datetime.now().day,
+            hour=config[ComponentKeys.allKeys["Lumiere"]["AllumeH"]],
+            minute=config[ComponentKeys.allKeys["Lumiere"]["AllumeM"]],
+            second=0,
+        )
+        self.time_light_close = datetime(
+            datetime.now().year,
+            datetime.now().month,
+            datetime.now().day,
+            hour=config[ComponentKeys.allKeys["Lumiere"]["EteintH"]],
+            minute=config[ComponentKeys.allKeys["Lumiere"]["EteintM"]],
+            second=0,
+        )
+
+        self.freq_water_1 = config["FreqWater1"]
+        self.freq_water_2 = config["FreqWater2"]
+        self.freq_water_3 = config["FreqWater3"]
+        self.freq_water_4 = config["FreqWater4"]
+        self.next_water_1 = config["NextWater1"]
+        self.next_water_2 = config["NextWater2"]
+        self.next_water_3 = config["NextWater3"]
+        self.next_water_4 = config["NextWater4"]
+        self.free_hum = config["HumidFree"]
+
+    def __del__(self):
+        self.target_temp = None
+        self.range_temp = None
+        self.target_hum = None
+        self.range_hum = None
+        self.time_light_open = None
+        self.time_light_close = None
+        self.freq_water_1 = None
+        self.next_water_1 = None
+        self.freq_water_2 = None
+        self.next_water_2 = None
+        self.freq_water_3 = None
+        self.next_water_3 = None
+        self.freq_water_4 = None
+        self.next_water_4 = None
+        self.free_hum = None
 
     def update(self, changes):
         pass
@@ -75,9 +96,19 @@ class ControlLogic:
         elif id_hum == 3:
             retour_vent_on = True
             retour_pulse_on = True
-                
-        return actions(retour_heat_on, retour_heat_off, retour_vent_on, retour_vent_off, 
-                        retour_lights, retour_water_1, retour_water_2,  retour_water_3,  retour_water_4, retour_pulse_on)        
+
+        return actions(
+            retour_heat_on,
+            retour_heat_off,
+            retour_vent_on,
+            retour_vent_off,
+            retour_lights,
+            retour_water_1,
+            retour_water_2,
+            retour_water_3,
+            retour_water_4,
+            retour_pulse_on,
+        )
 
     def check_lights(self):
         open = False
@@ -92,25 +123,32 @@ class ControlLogic:
         now = datetime.now.time()
         retour = False
 
-        if id ==  1:
+        if id == 1:
             if now > self.next_water_1:
                 retour = True
-                self.next_water_1 = self.next_water_1 + datetime.timedelta(hours=self.freq_water_1)
-        elif id ==  2:
+                self.next_water_1 = self.next_water_1 + datetime.timedelta(
+                    # this should probably be minutes
+                    hours=self.freq_water_1
+                )
+        elif id == 2:
             if now > self.next_water_2:
                 retour = True
-                self.next_water_2 = self.next_water_2 + datetime.timedelta(hours=self.freq_water_2)
-        elif id ==  3:
+                self.next_water_2 = self.next_water_2 + datetime.timedelta(
+                    hours=self.freq_water_2
+                )
+        elif id == 3:
             if now > self.next_water_3:
                 retour = True
-                self.next_water_3 = self.next_water_3 + datetime.timedelta(hours=self.freq_water_3)
-        elif id ==  4:
+                self.next_water_3 = self.next_water_3 + datetime.timedelta(
+                    hours=self.freq_water_3
+                )
+        elif id == 4:
             if now > self.next_water_4:
                 retour = True
-                self.next_water_4 = self.next_water_4 + datetime.timedelta(hours=self.freq_water_4)
+                self.next_water_4 = self.next_water_4 + datetime.timedelta(
+                    hours=self.freq_water_4
+                )
         return retour
-
-
 
     def check_temp(self, temp_int, temp_ext):
         retour = 0
@@ -127,7 +165,7 @@ class ControlLogic:
             else:
                 # start_vent
                 retour = 3
-                pass      
+                pass
             self.free_hum = False
         else:
             self.free_hum = True
@@ -148,4 +186,3 @@ class ControlLogic:
                     retour = 3
                     pass
         return retour
-

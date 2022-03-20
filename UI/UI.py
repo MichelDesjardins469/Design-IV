@@ -1,8 +1,9 @@
 import PySimpleGUI as sg
 from UI import ComponentKeys, TimeStamps
 
-# option pour choisir le type de plante
 # Ajouter une option rajouter de la lumiere instant si exemple is annonce gris
+# Ajouter le % d'ouverture des volets
+# ajouter de selectionner les options de 1 pompe a la fois
 
 
 def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
@@ -122,14 +123,31 @@ class Components:
                 600,
             ),
         ]
-        self.frame_hours_control_pompe = controleHeures(
-            ComponentKeys.allKeys["Pompe"]["AllumeH"],
-            ComponentKeys.allKeys["Pompe"]["AllumeM"],
-            ComponentKeys.allKeys["Pompe"]["EteintH"],
-            ComponentKeys.allKeys["Pompe"]["EteintM"],
-            ComponentKeys.allKeys["Pompe"]["TimerUsed"],
-            ComponentKeys.allKeys["Pompe"]["OnOffManual"],
-        )
+        self.frame_hours_control_pompe = [
+            [
+                sg.T("Choix de la zone a controlé :"),
+                sg.Combo(
+                    [1, 2, 3, 4],
+                    key=ComponentKeys.allKeys["Pompe"]["Zone"],
+                    default_value=1,
+                ),
+                sg.Checkbox(
+                    "On/Off",
+                    key=ComponentKeys.allKeys["Pompe"]["OnOffManual"],
+                    default=False,
+                    enable_events=True,
+                ),
+            ],
+            Slider2button(
+                "Nombre d'arrosage par heure",
+                ComponentKeys.allKeys["Pompe"]["Sub"],
+                ComponentKeys.allKeys["Pompe"]["Slider"],
+                ComponentKeys.allKeys["Pompe"]["Add"],
+                1,
+                60,
+                10,
+            ),
+        ]
         self.frame_hours_control_moteur = controleHeures(
             ComponentKeys.allKeys["Moteur"]["AllumeH"],
             ComponentKeys.allKeys["Moteur"]["AllumeM"],
@@ -199,3 +217,11 @@ class Components:
             ],
             [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
         ]
+
+    def __del__(self):
+        self.layout = None
+        self.frame_inputs_layout = None
+        self.frame_hours_control_pompe = None
+        self.frame_hours_control_moteur = None
+        self.frame_hours_control_lumiere = None
+        self.frame_machines_state = None

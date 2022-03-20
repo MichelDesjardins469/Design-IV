@@ -1,51 +1,6 @@
 {
-    "Temperature": {
-        "LastDesiredValue": 1,
-        "rangeMin": 1,
-        "rangeMax": 1
-    },
-    "CO2": {
-        "LastMeasuredValue": 1
-    },
-    "Humidite": {
-        "LastDesiredValue": 1
-    },
-    "Machinerie": {
-        "Lumiere": {
-            "AllumeH": 1,
-            "AllumeM": 1,
-            "EteintH": 1,
-            "EteintM": 1,
-            "TimerUsed": 1,
-            "OnOffManual": 1
-        },
-        "Moteurs": {
-            "AllumeH": 1,
-            "AllumeM": 1,
-            "EteintH": 1,
-            "EteintM": 1,
-            "TimerUsed": 1,
-            "OnOffManual": 1
-        },
-        "Pompe": {
-            "AllumeH": 1,
-            "AllumeM": 1,
-            "EteintH": 1,
-            "EteintM": 1,
-            "TimerUsed": 1,
-            "OnOffManual": 1
-        },
-        "Vents": {
-            "AllumeH": 1,
-            "AllumeM": 1,
-            "EteintH": 1,
-            "EteintM": 1,
-            "TimerUsed": 1,
-            "OnOffManual": 1
-        }
-    },
-    "SliderTemp": 19.0,
-    "SliderHumid": 76.0,
+    "SliderTemp": 20.0,
+    "SliderHumid": 80.0,
     "AllumePompeH": 8,
     "AllumePompeM": 0,
     "EteintPompeH": 16,
@@ -64,5 +19,18 @@
     "EteintLumiereM": 0,
     "TimerLumiereUsed": false,
     "LumiereOnOffManual": false,
-    "SliderCO2": 580.0
+    "SliderCO2": 600.0,
+    "TempRange": 1,
+    "HumidRange": 1,
+    "HumidFree": 1,
+    "FreqWater1": 20.0,
+    "FreqWater2": 13.5,
+    "FreqWater3": 1,
+    "FreqWater4": 1,
+    "NextWater1": 1,
+    "NextWater2": 1,
+    "NextWater3": 1,
+    "NextWater4": 1,
+    "ZoneChoisie": 1,
+    "SliderPompe": 20.0
 }

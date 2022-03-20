@@ -14,7 +14,7 @@ PIN_VALVE_1 = 0
 PIN_VALVE_2 = 0
 PIN_VALVE_3 = 0
 PIN_VALVE_4 = 0
-FREQ_PWM = 0.0083333 # dure 2 minute
+FREQ_PWM = 0.0083333  # dure 2 minute
 DUTY_CYCLE = 50
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
@@ -24,21 +24,28 @@ LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
 complete_readings = namedtuple(
-    "complete_readings", "temp_int_1 temp_int_2 temp_ext hum_int_1 hum_int_2 hum_ext CO2_int_1 CO2_int_2"
+    "complete_readings",
+    "temp_int_1 temp_int_2 temp_ext hum_int_1 hum_int_2 hum_ext CO2_int_1 CO2_int_2",
 )
 station_reading = namedtuple("station_reading", "temp hum CO2")
 
 
 class HardwareAccess:
-    list_serials = []
-    heat_on = False
-    lights_on = False
-    volet_opened = False
-    fan_on = False
-    pulse_on = False
-
     def __init__(self):
-        pass
+        self.list_serials = []
+        self.heat_on = False
+        self.lights_on = False
+        self.volet_opened = False
+        self.fan_on = False
+        self.pulse_on = False
+
+    def __del__(self):
+        self.list_serials = None
+        self.heat_on = None
+        self.lights_on = None
+        self.volet_opened = None
+        self.fan_on = None
+        self.pulse_on = None
 
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
@@ -76,7 +83,7 @@ class HardwareAccess:
         if actions.heat_pulse_on and not self.pulse_on:
             self.pwm.start(DUTY_CYCLE)
             self.pulse_on = True
-        else :
+        else:
             self.pwm.stop()
             self.pulse_on = False
 
@@ -112,7 +119,8 @@ class HardwareAccess:
         t = threading.Thread(target=self.open_volets_thread)
         t.start()
 
-    def open_volets_thread(self):
+    # pas certain qu'on ait besoin de faire 2 fonctions differentes pour l'ouverture et la fermeture
+    def open_volets_thread(self, pourcentageOuverture):
         # TODO do the open
         return True
 
@@ -142,7 +150,6 @@ class HardwareAccess:
             self.heat_on = False
 
     def get_lecture_sensors(self):
-
         results_int = []
         result_ext = []
         for ser in self.list_serials:
@@ -152,15 +159,21 @@ class HardwareAccess:
                 print("couldn't not contact one station")
                 # results_int.append(None)
             else:
-                splits = reading.decode('utf-8').split(":")
+                splits = reading.decode("utf-8").split(":")
                 if splits[2] == -1:
                     result_ext = splits
                 else:
                     results_int.append(splits)
-                
+
         return complete_readings(
-            results_int[0][0], results_int[1][0], result_ext[0], results_int[0][1], results_int[1][1], result_ext[1], 
-            results_int[0][2], results_int[1][2]
+            results_int[0][0],
+            results_int[1][0],
+            result_ext[0],
+            results_int[0][1],
+            results_int[1][1],
+            result_ext[1],
+            results_int[0][2],
+            results_int[1][2],
         )
 
     def get_lecture_sensors_threaded(self):
@@ -168,16 +181,24 @@ class HardwareAccess:
         result_ext = []
         threads = []
         for ser in self.list_serials:
-            t = threading.Thread(target=self.contact_sensor, args=(ser, results_int, result_ext,))
+            t = threading.Thread(
+                target=self.contact_sensor, args=(ser, results_int, result_ext)
+            )
             threads.append(t)
             t.start()
-        
+
         for t in threads:
             t.join()
-                
+
         return complete_readings(
-            results_int[0][0], results_int[1][0], result_ext[0][0], results_int[0][1], results_int[1][1], result_ext[1], 
-            results_int[0][2], results_int[1][2]
+            results_int[0][0],
+            results_int[1][0],
+            result_ext[0][0],
+            results_int[0][1],
+            results_int[1][1],
+            result_ext[1],
+            results_int[0][2],
+            results_int[1][2],
         )
 
     def contact_sensor(self, serial, output_int, output_ext):
@@ -187,7 +208,7 @@ class HardwareAccess:
             print("couldn't not contact one station")
             # results_int.append(None)
         else:
-            splits = reading.decode('utf-8').split(":")
+            splits = reading.decode("utf-8").split(":")
             if splits[2] == -1:
                 output_ext.append(splits)
             else:

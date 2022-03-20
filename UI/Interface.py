@@ -1,5 +1,6 @@
 import PySimpleGUI as sg
 from UI import ComponentKeys, UI
+import time
 
 sg.theme("DarkTeal12")
 
@@ -83,6 +84,9 @@ class Interface:
                 self.values[ComponentKeys.allKeys[componentKey]["Slider"]] + increment
             )
             self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+        if componentKey == "Pompe":
+            zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
+            self.values["FreqWater" + str(zone)] = newValue
 
     def getValues(self):
         return self.values
@@ -117,17 +121,25 @@ class Interface:
                     self.controlTimers("Lumiere")
                 if self.event == ComponentKeys.allKeys["Moteur"]["TimerUsed"]:
                     self.controlTimers("Moteur")
-                if self.event == ComponentKeys.allKeys["Pompe"]["TimerUsed"]:
-                    self.controlTimers("Pompe")
-                    self.window[ComponentKeys.allKeys["Lumiere"]["StateImage"]].update(
-                        filename="UI/green_power_sign.png"
-                    )
                 if self.event == ComponentKeys.allKeys["Lumiere"]["OnOffManual"]:
                     self.controlOnOffs("Lumiere")
                 if self.event == ComponentKeys.allKeys["Moteur"]["OnOffManual"]:
                     self.controlOnOffs("Moteur")
                 if self.event == ComponentKeys.allKeys["Pompe"]["OnOffManual"]:
                     self.controlOnOffs("Pompe")
+                    self.window[ComponentKeys.allKeys["Pompe"]["StateImage"]].update(
+                        filename="UI/green_power_sign.png"
+                    )
+                if self.event == ComponentKeys.allKeys["Pompe"]["Sub"]:
+                    self.updateSlider("Pompe", False, 5)
+
+                if self.event == ComponentKeys.allKeys["Pompe"]["Add"]:
+                    self.updateSlider("Pompe", True, 5)
+                # if self.event == ComponentKeys.allKeys["Pompe"]["Slider"]:
+                #    zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
+                #    self.values["FreqWater" + str(zone)] = self.values[
+                #        ComponentKeys.allKeys["Pompe"]["Slider"]
+                #    ]
                 if self.event == ComponentKeys.allKeys["CO2"]["Sub"]:
                     self.updateSlider("CO2", False, 10)
                 if self.event == ComponentKeys.allKeys["CO2"]["Add"]:
