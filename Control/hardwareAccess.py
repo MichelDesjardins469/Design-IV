@@ -40,6 +40,9 @@ class HardwareAccess:
         self.volet_opened = False
         self.fan_on = False
         self.pulse_on = False
+        self.test_file_temp_line = 0
+        self.test_file_hum_line = 0
+        self.test_file_co2_line = 0
 
     def __del__(self):
         self.list_serials = None
@@ -48,6 +51,9 @@ class HardwareAccess:
         self.volet_opened = None
         self.fan_on = None
         self.pulse_on = None
+        self.test_file_temp_line = None
+        self.test_file_hum_line = None
+        self.test_file_co2_line = None
 
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
@@ -196,14 +202,14 @@ class HardwareAccess:
                     results_int.append(splits)
 
         return complete_readings(
-            results_int[0][0],
-            results_int[1][0],
-            result_ext[0],
-            results_int[0][1],
-            results_int[1][1],
-            result_ext[1],
-            results_int[0][2],
-            results_int[1][2],
+            float(results_int[0][0]),
+            float(results_int[1][0]),
+            float(result_ext[0]),
+            float(results_int[0][1]),
+            float(results_int[1][1]),
+            float(result_ext[1]),
+            float(results_int[0][2]),
+            float(results_int[1][2]),
         )
 
     def get_lecture_sensors_threaded(self):
@@ -221,14 +227,14 @@ class HardwareAccess:
             t.join()
 
         return complete_readings(
-            results_int[0][0],
-            results_int[1][0],
-            result_ext[0][0],
-            results_int[0][1],
-            results_int[1][1],
-            result_ext[1],
-            results_int[0][2],
-            results_int[1][2],
+            float(results_int[0][0]),
+            float(results_int[1][0]),
+            float(result_ext[0][0]),
+            float(results_int[0][1]),
+            float(results_int[1][1]),
+            float(result_ext[1]),
+            float(results_int[0][2]),
+            float(results_int[1][2]),
         )
 
     def contact_sensor(self, serial, output_int, output_ext):
@@ -254,3 +260,46 @@ class HardwareAccess:
 
         readings = complete_readings(temp_int, temp_int, 0, 0, 0, 0, 0, 0)
         return readings
+
+    def get_lecture_sensors_test_simulated(self, directory):
+        f_temp = open("test_lecture_files/" + directory + "/temp.txt")
+        lines = f_temp.readlines()
+        f_temp.close()
+        if self.test_file_temp_line >= lines.size():
+            self.test_file_temp_line = 0
+        line_temp = lines[self.test_file_temp_line]
+        self.test_file_temp_line += 1
+
+        f_hum = open("test_lecture_files/" + directory + "/hum.txt")
+        lines = f_hum.readlines()
+        f_hum.close()
+        if self.test_file_hum_line >= lines.size():
+            self.test_file_hum_line = 0
+        line_hum = lines[self.test_file_hum_line]
+        self.test_file_hum_line += 1
+
+        f_co2 = open("test_lecture_files/" + directory + "/CO2.txt")
+        lines = f_co2.readlines()
+        f_co2.close()
+        if self.test_file_co2_line >= lines.size():
+            self.test_file_co2_line = 0
+        line_co2 = lines[self.test_file_co2_line]
+        self.test_file_co2_line += 1
+
+        splits_temp = line_temp.split(":")
+        splits_hum = line_hum.split(":")
+        splits_co2 = line_co2.split(":")
+
+        readings = complete_readings(
+                            splits_temp[0],
+                            splits_temp[1], 
+                            splits_temp[2], 
+                            splits_hum[0], 
+                            splits_hum[1], 
+                            splits_hum[2], 
+                            splits_co2[0], 
+                            splits_co2[1])
+        time.sleep(5)
+        return readings
+
+
