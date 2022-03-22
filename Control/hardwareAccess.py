@@ -117,7 +117,7 @@ class HardwareAccess:
         if(actions.water_4_on):
             water_ids.append(4)
         
-        if water_ids.size() != 0:
+        if len(water_ids) != 0:
             self.watering(water_ids)
 
     def watering(self, section_ids):
@@ -151,9 +151,10 @@ class HardwareAccess:
             self.fan_on = False
 
     def open_volets(self):
-        self.volet_opened = True
-        t = threading.Thread(target=self.open_volets_thread)
-        t.start()
+        if not self.volet_opened:
+            self.volet_opened = True
+            t = threading.Thread(target=self.open_volets_thread, args=(100,))
+            t.start()
 
     # pas certain qu'on ait besoin de faire 2 fonctions differentes pour l'ouverture et la fermeture
     def open_volets_thread(self, pourcentageOuverture):
@@ -161,9 +162,10 @@ class HardwareAccess:
         return True
 
     def close_volet(self):
-        self.volet_opened = False
-        t = threading.Thread(target=self.close_volets_thread)
-        t.start()
+        if self.volet_opened:
+            self.volet_opened = False
+            t = threading.Thread(target=self.close_volets_thread)
+            t.start()
 
     def close_volets_thread(self):
         # TODO do the close
@@ -265,7 +267,7 @@ class HardwareAccess:
         f_temp = open("test_lecture_files/" + directory + "/temp.txt")
         lines = f_temp.readlines()
         f_temp.close()
-        if self.test_file_temp_line >= lines.size():
+        if self.test_file_temp_line >= len(lines):
             self.test_file_temp_line = 0
         line_temp = lines[self.test_file_temp_line]
         self.test_file_temp_line += 1
@@ -273,7 +275,7 @@ class HardwareAccess:
         f_hum = open("test_lecture_files/" + directory + "/hum.txt")
         lines = f_hum.readlines()
         f_hum.close()
-        if self.test_file_hum_line >= lines.size():
+        if self.test_file_hum_line >= len(lines):
             self.test_file_hum_line = 0
         line_hum = lines[self.test_file_hum_line]
         self.test_file_hum_line += 1
@@ -281,7 +283,7 @@ class HardwareAccess:
         f_co2 = open("test_lecture_files/" + directory + "/CO2.txt")
         lines = f_co2.readlines()
         f_co2.close()
-        if self.test_file_co2_line >= lines.size():
+        if self.test_file_co2_line >= len(lines):
             self.test_file_co2_line = 0
         line_co2 = lines[self.test_file_co2_line]
         self.test_file_co2_line += 1
@@ -291,14 +293,14 @@ class HardwareAccess:
         splits_co2 = line_co2.split(":")
 
         readings = complete_readings(
-                            splits_temp[0],
-                            splits_temp[1], 
-                            splits_temp[2], 
-                            splits_hum[0], 
-                            splits_hum[1], 
-                            splits_hum[2], 
-                            splits_co2[0], 
-                            splits_co2[1])
+                            float(splits_temp[0]),
+                            float(splits_temp[1]), 
+                            float(splits_temp[2]), 
+                            float(splits_hum[0]), 
+                            float(splits_hum[1]), 
+                            float(splits_hum[2]), 
+                            float(splits_co2[0]), 
+                            float(splits_co2[1]))
         time.sleep(5)
         return readings
 
