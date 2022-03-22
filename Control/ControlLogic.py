@@ -40,10 +40,10 @@ class ControlLogic:
         self.freq_water_2 = config["FreqWater2"]
         self.freq_water_3 = config["FreqWater3"]
         self.freq_water_4 = config["FreqWater4"]
-        self.next_water_1 = config["NextWater1"]
-        self.next_water_2 = config["NextWater2"]
-        self.next_water_3 = config["NextWater3"]
-        self.next_water_4 = config["NextWater4"]
+        self.next_water_1 = datetime.strptime(config["NextWater1"], "%d/%m/%Y %H:%M")
+        self.next_water_2 = datetime.strptime(config["NextWater2"], "%d/%m/%Y %H:%M")
+        self.next_water_3 = datetime.strptime(config["NextWater3"], "%d/%m/%Y %H:%M")
+        self.next_water_4 = datetime.strptime(config["NextWater4"], "%d/%m/%Y %H:%M")
         self.free_hum = config["HumidFree"]
 
     def __del__(self):
@@ -120,7 +120,7 @@ class ControlLogic:
         return open
 
     def check_water(self, id):
-        now = datetime.now.time()
+        now = datetime.now()
         retour = False
 
         if id == 1:
@@ -158,7 +158,7 @@ class ControlLogic:
             retour = 1
             self.free_hum = False
         elif temp_int > (self.target_temp + self.range_temp):
-            if temp_ext > TRESHOLD_TEMP_EXT:
+            if temp_ext < TRESHOLD_TEMP_EXT:
                 # stop_chauffage
                 retour = 2
                 pass

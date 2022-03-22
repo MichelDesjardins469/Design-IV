@@ -1,4 +1,5 @@
 # from hardwareAccess import HardwareAccess
+from Control.DummyHardwareAccess import DummyHardwareAccess
 from Utils.ValuesSaver import ValuesSaver
 from UI.Interface import Interface
 from UI.UI import Components
@@ -7,9 +8,10 @@ import time
 import json
 from threading import Thread
 
-config_file = "Utils/config.json"
+# config_file = "Utils/config.json"
+config_file = "Utils/config_test.json"
 config = {}
-# hardware = HardwareAccess()
+hardware = DummyHardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file)
 components = Components()
@@ -40,20 +42,21 @@ def actionLoop():
         if CO2Level > 5:
             interface.CO2NiveauCritiquePopup()
             CO2Level = 0
-        # readings = hardware.get_lecture_sensors_test_random()
+        readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         # print("La température est de :" + str(readings.temp_int) + "˚C")
-        # actions = logic.logic_loop(readings)
-        # hardware.traitement_actions(actions)
+        actions = logic.logic_loop(readings)
+        hardware.traitement_actions(actions)
         time.sleep(0.5)
 
 
 def setup():
-    # hardware.setup_hardware_access()
+    hardware.setup_hardware_access()
     load_config()
 
 
 def load_config():
     config = valuesSaver.getValues()
+    global logic
     logic = ControlLogic(config)
 
 
