@@ -1,6 +1,6 @@
 {
     "SliderTemp": 20.0,
-    "SliderHumid": 80.0,
+    "SliderHumid": 84.0,
     "AllumePompeH": 8,
     "AllumePompeM": 0,
     "EteintPompeH": 16,
@@ -32,5 +32,5 @@
     "NextWater3": 1,
     "NextWater4": 1,
     "ZoneChoisie": 1,
-    "SliderPompe": 20.0
+    "SliderPompe": 10.0
 }

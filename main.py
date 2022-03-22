@@ -1,12 +1,11 @@
 # from hardwareAccess import HardwareAccess
 from Control.DummyHardwareAccess import DummyHardwareAccess
-from Utils.ValuesSaver import ValuesSaver
+import time
+from threading import Thread
 from UI.Interface import Interface
 from UI.UI import Components
 from Control.ControlLogic import ControlLogic
-import time
-import json
-from threading import Thread
+from Utils.ValuesSaver import ValuesSaver
 
 # config_file = "Utils/config.json"
 config_file = "Utils/config_test.json"
@@ -20,16 +19,16 @@ interface = Interface(components)
 
 def main():
     setup()
-    t1 = Thread(target=interface.runInterface)
-    t2 = Thread(target=actionLoop)
-    t1.start()
-    t2.start()
-    t1.join()
-    t2.join()
+    t_1 = Thread(target=interface.runInterface)
+    t_2 = Thread(target=actionLoop)
+    t_1.start()
+    t_2.start()
+    t_1.join()
+    t_2.join()
 
 
 def actionLoop():
-    CO2Level = 0
+    co2_level = 0
     while True:
         # ping_watchdog()
         if interface.windowDown:
@@ -38,11 +37,16 @@ def actionLoop():
         if changements:
             # logic.update(changements)
             valuesSaver.updateValues(interface.getValues())
-        CO2Level += 1
-        if CO2Level > 5:
+        co2_level += 1
+        if co2_level > 5:
             interface.CO2NiveauCritiquePopup()
+<<<<<<< Updated upstream
             CO2Level = 0
         readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
+=======
+            co2_level = 0
+        # readings = hardware.get_lecture_sensors_test_random()
+>>>>>>> Stashed changes
         # print("La température est de :" + str(readings.temp_int) + "˚C")
         actions = logic.logic_loop(readings)
         hardware.traitement_actions(actions)
@@ -61,9 +65,9 @@ def load_config():
 
 
 def ping_watchdog():
-    f = open("/dev/watchdog", "w")
-    f.write("S")
-    f.close()
+    file_to_open = open("/dev/watchdog", "w")
+    file_to_open.write("S")
+    file_to_open.close()
 
 
 if __name__ == "__main__":
