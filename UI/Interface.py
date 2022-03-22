@@ -151,6 +151,6 @@ class Interface:
                 if self.event == ComponentKeys.allKeys["Humidity"]["Sub"]:
                     self.updateSlider("Humidity", False, 2)
                 if self.event == ComponentKeys.allKeys["Humidity"]["Add"]:
-                    self.updateSlider("Humidity", Truea, 2)
+                    self.updateSlider("Humidity", True, 2)
                 if self.event == "Soumettre":
                     print(self.values)
