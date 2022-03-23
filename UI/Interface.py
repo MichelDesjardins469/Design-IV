@@ -1,6 +1,5 @@
 import PySimpleGUI as sg
 from UI import ComponentKeys, UI
-import time
 
 sg.theme("DarkTeal12")
 
@@ -8,11 +7,11 @@ sg.theme("DarkTeal12")
 class Interface:
     def __init__(self, components):
         self.layout = components.layout
+        self.value_changed = None
+        self.window_down = False
         self.values = None
-        self.valueChanged = None
-        self.windowDown = False
-        self.CO2Danger = False
         self.event = None
+        self.co2_danger = False
         self.window = sg.Window(
             "Contrôle de la serre", self.layout, element_justification="c"
         )
@@ -20,13 +19,13 @@ class Interface:
     def __del__(self):
         self.layout = None
         self.values = None
-        self.valueChanged = None
-        self.windowDown = None
+        self.value_changed = None
+        self.window_down = None
         self.event = None
         self.window = None
 
     def controlTimers(self, componentKey):
-        if self.values[ComponentKeys.allKeys[componentKey]["TimerUsed"]] == True:
+        if self.values[ComponentKeys.allKeys[componentKey]["TimerUsed"]]:
             self.window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(
                 disabled=False
             )
@@ -60,7 +59,7 @@ class Interface:
             )
 
     def controlOnOffs(self, componentKey):
-        if self.values[ComponentKeys.allKeys[componentKey]["OnOffManual"]] == True:
+        if self.values[ComponentKeys.allKeys[componentKey]["OnOffManual"]]:
             self.window[ComponentKeys.allKeys[componentKey]["OnOffManual"]].update(
                 text="On"
             )
@@ -75,56 +74,67 @@ class Interface:
 
     def updateSlider(self, componentKey, Add, increment):
         if not Add:
-            newValue = (
+            new_value = (
                 self.values[ComponentKeys.allKeys[componentKey]["Slider"]] - increment
             )
-            self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+            self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(new_value)
         else:
-            newValue = (
+            new_value = (
                 self.values[ComponentKeys.allKeys[componentKey]["Slider"]] + increment
             )
-            self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(newValue)
+            self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(new_value)
         if componentKey == "Pompe":
             zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
-            self.values["FreqWater" + str(zone)] = newValue
+            self.values["FreqWater" + str(zone)] = new_value
 
     def getValues(self):
         return self.values
 
+    def setValues(self, updatedValues):
+        for key in self.values:
+            self.window[key].update(updatedValues[key])
+
     def checkChangements(self):
-        valueChangedTemp = self.valueChanged
-        if self.valueChanged == True:
-            self.valueChanged = False
-        return valueChangedTemp
+        value_changed_temp = self.value_changed
+        if self.value_changed:
+            self.value_changed = False
+        return value_changed_temp
 
     def CO2NiveauCritiquePopup(self):
-        self.CO2Danger = True
+        self.co2_danger = True
 
-    def runInterface(self):
-        timeCount = 0
+    def updateRealTimeValues(self, dictValues):
+        for key in dictValues:
+            self.window[key].update(str(dictValues[key]))
+
+    def runInterface(self, config_file):
+        self.event, self.values = self.window.read(timeout=500)
+        self.setValues(config_file)
+        time_count = 0
+
         while True:
             self.event, self.values = self.window.read(timeout=500)
-            timeCount += 1
-            if self.CO2Danger and timeCount > 7200:
+            time_count += 1
+            if self.co2_danger and time_count > 7200:
                 event, values = UI.CO2NiveauCritiquePopup()
-                self.CO2Danger = False
-                timeCount = 0
+                self.co2_danger = False
+                time_count = 0
             # main logic from down here
             if self.event in (None, "Exit", "Cancel"):
-                self.windowDown = True
+                self.window_down = True
                 break
             else:
-                self.valueChanged = True
+                self.value_changed = True
                 if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
                     # sg.popup('Bonjour')
-                    self.valueChanged = True
+                    self.value_changed = True
                     self.controlTimers("Lumiere")
-                if self.event == ComponentKeys.allKeys["Moteur"]["TimerUsed"]:
-                    self.controlTimers("Moteur")
-                if self.event == ComponentKeys.allKeys["Lumiere"]["OnOffManual"]:
-                    self.controlOnOffs("Lumiere")
-                if self.event == ComponentKeys.allKeys["Moteur"]["OnOffManual"]:
-                    self.controlOnOffs("Moteur")
+                if self.event == "MotorOnButton":
+                    self.window["MotorOnButton"].update(button_color="green")
+                    self.window["MotorOffButton"].update(button_color="grey")
+                if self.event == "MotorOffButton":
+                    self.window["MotorOffButton"].update(button_color="green")
+                    self.window["MotorOnButton"].update(button_color="grey")
                 if self.event == ComponentKeys.allKeys["Pompe"]["OnOffManual"]:
                     self.controlOnOffs("Pompe")
                     self.window[ComponentKeys.allKeys["Pompe"]["StateImage"]].update(
@@ -132,7 +142,6 @@ class Interface:
                     )
                 if self.event == ComponentKeys.allKeys["Pompe"]["Sub"]:
                     self.updateSlider("Pompe", False, 5)
-
                 if self.event == ComponentKeys.allKeys["Pompe"]["Add"]:
                     self.updateSlider("Pompe", True, 5)
                 # if self.event == ComponentKeys.allKeys["Pompe"]["Slider"]:
