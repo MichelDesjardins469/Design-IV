@@ -6,19 +6,19 @@ import RPi.GPIO as GPIO
 import threading
 import time
 
-PIN_HEATER = 0
-PIN_VOLETS_OUVRE = 0
-PIN_VOLETS_FERME = 0
-PIN_VENT = 0
-PIN_WATER_PUMP = 0
-PIN_LIGHTS = 0
-PIN_VALVE_1 = 0
-PIN_VALVE_2 = 0
-PIN_VALVE_3 = 0
-PIN_VALVE_4 = 0
+PIN_HEATER = 19
+PIN_VOLETS_OUVRE = 21
+PIN_VOLETS_FERME = 23
+PIN_VENT = 24
+PIN_WATER_PUMP = 3
+PIN_LIGHTS = 35
+PIN_VALVE_1 = 5
+PIN_VALVE_2 = 8
+PIN_VALVE_3 = 10
+PIN_VALVE_4 = 12
 FREQ_PWM = 0.0083333  # dure 2 minute
 DUTY_CYCLE = 50
-WATER_DURATION = 0
+WATER_DURATION = 5
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
@@ -77,7 +77,17 @@ class HardwareAccess:
         GPIO.setup(PIN_VALVE_2, GPIO.OUT)
         GPIO.setup(PIN_VALVE_3, GPIO.OUT)
         GPIO.setup(PIN_VALVE_4, GPIO.OUT)
-        self.pwm = GPIO.pwm(PIN_HEATER, FREQ_PWM)
+        self.pwm = GPIO.PWM(PIN_HEATER, FREQ_PWM)
+        GPIO.output(PIN_HEATER, GPIO.LOW)
+        GPIO.output(PIN_VOLETS_OUVRE, GPIO.LOW)
+        GPIO.output(PIN_VOLETS_FERME, GPIO.LOW)
+        GPIO.output(PIN_VENT, GPIO.LOW)
+        GPIO.output(PIN_WATER_PUMP, GPIO.LOW)
+        GPIO.output(PIN_LIGHTS, GPIO.LOW)
+        GPIO.output(PIN_VALVE_1, GPIO.LOW)
+        GPIO.output(PIN_VALVE_2, GPIO.LOW)
+        GPIO.output(PIN_VALVE_3, GPIO.LOW)
+        GPIO.output(PIN_VALVE_4, GPIO.LOW)
 
     def setup_serials(self):
         for port in LIST_PORTS:
@@ -127,7 +137,7 @@ class HardwareAccess:
             self.watering(water_ids)
 
     def watering(self, section_ids):
-        t = threading.Thread(target=self.watering_thread, args=(section_ids))
+        t = threading.Thread(target=self.watering_thread, args=(section_ids,))
         t.start()
 
     def watering_thread(self, section_ids):
