@@ -197,9 +197,9 @@ class Components:
             ],
             [
                 sg.T("Humidité capteur 1 : ", font=("Any 9")),
-                sg.T("", key="humid_int_1", font=("Any 9")),
+                sg.T("", key="hum_int_1", font=("Any 9")),
                 sg.T("Humidité capteur 2 : ", font=("Any 9")),
-                sg.T("", key="humid_int_2", font=("Any 9")),
+                sg.T("", key="hum_int_2", font=("Any 9")),
             ],
             [
                 sg.T("Humidité extérieure: ", font=("Any 9")),
@@ -209,7 +209,7 @@ class Components:
                 sg.T("CO2 capteur 1 : ", font=("Any 9")),
                 sg.T("", key="CO2_int_1", font=("Any 9")),
                 sg.T("CO2 capteur 2 : ", font=("Any 9")),
-                sg.T("", key="CO2_int_1", font=("Any 9")),
+                sg.T("", key="CO2_int_2", font=("Any 9")),
             ],
         ]
 
