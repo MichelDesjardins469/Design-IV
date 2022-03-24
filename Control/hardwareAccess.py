@@ -6,17 +6,18 @@ import RPi.GPIO as GPIO
 import threading
 import time
 
-PIN_HEATER = 19
-PIN_VOLETS_OUVRE = 21
-PIN_VOLETS_FERME = 23
-PIN_VENT = 24
-PIN_WATER_PUMP = 3
+PIN_HEATER = 8
+PIN_VOLETS_OUVRE = 3
+PIN_VOLETS_FERME = 5
+PIN_VENT = 10
+PIN_WATER_PUMP = 19
 PIN_LIGHTS = 35
-PIN_VALVE_1 = 5
-PIN_VALVE_2 = 8
-PIN_VALVE_3 = 10
-PIN_VALVE_4 = 12
-FREQ_PWM = 0.0083333  # dure 2 minute
+PIN_VALVE_1 = 21
+PIN_VALVE_2 = 22
+PIN_VALVE_3 = 24
+PIN_VALVE_4 = 26
+#FREQ_PWM = 0.0083333  # dure 2 minute
+FREQ_PWM = 2
 DUTY_CYCLE = 50
 WATER_DURATION = 5
 
@@ -46,6 +47,7 @@ class HardwareAccess:
         self.test_file_co2_line = 0
         self.temp_ouverture_total_volets = 5
         self.current_ouverture_volets = 0
+        self.pulsing = None
 
     def __del__(self):
         self.list_serials = None
@@ -59,6 +61,7 @@ class HardwareAccess:
         self.test_file_co2_line = None
         self.temp_ouverture_total_volets = None
         self.current_ouverture_volets = None
+        self.pulsing = None
 
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
@@ -77,7 +80,7 @@ class HardwareAccess:
         GPIO.setup(PIN_VALVE_2, GPIO.OUT)
         GPIO.setup(PIN_VALVE_3, GPIO.OUT)
         GPIO.setup(PIN_VALVE_4, GPIO.OUT)
-        self.pwm = GPIO.PWM(PIN_HEATER, FREQ_PWM)
+        self.pulsing = GPIO.PWM(PIN_HEATER, FREQ_PWM)
         GPIO.output(PIN_HEATER, GPIO.LOW)
         GPIO.output(PIN_VOLETS_OUVRE, GPIO.LOW)
         GPIO.output(PIN_VOLETS_FERME, GPIO.LOW)
@@ -105,10 +108,10 @@ class HardwareAccess:
         self.control_lights(actions.lights_turn_on)
 
         if actions.heat_pulse_on and not self.pulse_on:
-            self.pwm.start(DUTY_CYCLE)
+            self.pulsing.start(DUTY_CYCLE)
             self.pulse_on = True
-        else:
-            self.pwm.stop()
+        elif not actions.heat_pulse_on and self.pulse_on:
+            self.pulsing.stop()
             self.pulse_on = False
 
         if actions.heat_turn_on:
@@ -332,7 +335,7 @@ class HardwareAccess:
                             float(splits_hum[2]), 
                             float(splits_co2[0]), 
                             float(splits_co2[1]))
-        time.sleep(5)
+        time.sleep(1)
         return readings
 
 
