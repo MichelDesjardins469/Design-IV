@@ -6,24 +6,26 @@ from UI.Interface import Interface
 from UI.UI import Components
 from Control.ControlLogic import ControlLogic
 from Utils.ValuesSaver import ValuesSaver
+from queue import Queue
 
 # config_file = "Utils/config.json"
 config_file_path = "Utils/config_test.json"
-# hardware = DummyHardwareAccess()
+hardware = DummyHardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file_path)
 components = Components()
 interface = Interface(components)
+q = Queue()
 
 
 def main():
     config_file = setup()
-    t_1 = Thread(target=interface.runInterface, args=(config_file,))
-    # t_2 = Thread(target=actionLoop)
+    t_1 = Thread(target=interface.runInterface, args=(config_file, q))
+    t_2 = Thread(target=actionLoop)
     t_1.start()
-    # t_2.start()
+    t_2.start()
     t_1.join()
-    # t_2.join()
+    t_2.join()
 
 
 def actionLoop():
@@ -41,16 +43,17 @@ def actionLoop():
             interface.CO2NiveauCritiquePopup()
             # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
             co2_level = 0
-        interface.updateRealTimeValues(readings)
-        # readings = hardware.get_lecture_sensors_test_random()
+        readings = hardware.get_lecture_sensors_test_random()
+        q.put(readings)
+        q.join()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
-        # actions = logic.logic_loop(readings)
+        actions = logic.logic_loop(readings)
         # hardware.traitement_actions(actions)
         time.sleep(0.5)
 
 
 def setup():
-    # hardware.setup_hardware_access()
+    hardware.setup_hardware_access()
     return load_config()
 
 

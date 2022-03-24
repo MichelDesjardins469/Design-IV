@@ -104,10 +104,10 @@ class Interface:
         self.co2_danger = True
 
     def updateRealTimeValues(self, dictValues):
-        for key in dictValues:
-            self.window[key].update(str(dictValues[key]))
+        for key in dictValues._asdict():
+            self.window[key].update(getattr(dictValues, key))
 
-    def runInterface(self, config_file):
+    def runInterface(self, config_file, q):
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
         time_count = 0
@@ -119,6 +119,10 @@ class Interface:
                 event, values = UI.CO2NiveauCritiquePopup()
                 self.co2_danger = False
                 time_count = 0
+            readings = q.get()
+            for key in readings._asdict():
+                self.window[key].update(getattr(readings, key))
+            q.task_done()
             # main logic from down here
             if self.event in (None, "Exit", "Cancel"):
                 self.window_down = True
