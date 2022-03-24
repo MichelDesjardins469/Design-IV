@@ -7,7 +7,8 @@ import threading
 import time
 
 PIN_HEATER = 0
-PIN_VOLETS = 0
+PIN_VOLETS_OUVRE = 0
+PIN_VOLETS_FERME = 0
 PIN_VENT = 0
 PIN_WATER_PUMP = 0
 PIN_LIGHTS = 0
@@ -43,6 +44,8 @@ class HardwareAccess:
         self.test_file_temp_line = 0
         self.test_file_hum_line = 0
         self.test_file_co2_line = 0
+        self.temp_ouverture_total_volets = 5
+        self.current_ouverture_volets = 0
 
     def __del__(self):
         self.list_serials = None
@@ -54,6 +57,8 @@ class HardwareAccess:
         self.test_file_temp_line = None
         self.test_file_hum_line = None
         self.test_file_co2_line = None
+        self.temp_ouverture_total_volets = None
+        self.current_ouverture_volets = None
 
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
@@ -63,7 +68,8 @@ class HardwareAccess:
     def setup_gpios(self):
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(PIN_HEATER, GPIO.OUT)
-        GPIO.setup(PIN_VOLETS, GPIO.OUT)
+        GPIO.setup(PIN_VOLETS_OUVRE, GPIO.OUT)
+        GPIO.setup(PIN_VOLETS_FERME, GPIO.OUT)
         GPIO.setup(PIN_VENT, GPIO.OUT)
         GPIO.setup(PIN_WATER_PUMP, GPIO.OUT)
         GPIO.setup(PIN_LIGHTS, GPIO.OUT)
@@ -137,9 +143,20 @@ class HardwareAccess:
             GPIO.output(PIN_WATER_PUMP, GPIO.LOW)
 
     def turn_on_water_valve(self, section_id):
-        # open valve
+        pin = 0
+        if section_id == 1:
+            pin = PIN_VALVE_1
+        elif section_id == 2:
+            pin = PIN_VALVE_2
+        elif section_id == 3:
+            pin = PIN_VALVE_3
+        elif section_id == 4:
+            pin = PIN_VALVE_4
+        
+        # pour l'instant j'assume que les valves sont on/off
+        GPIO.output(pin, GPIO.HIGH)
         time.sleep(WATER_DURATION)
-        # close valve
+        GPIO.output(pin, GPIO.LOW)
 
 
     def control_fan(self, on):
@@ -158,8 +175,11 @@ class HardwareAccess:
 
     # pas certain qu'on ait besoin de faire 2 fonctions differentes pour l'ouverture et la fermeture
     def open_volets_thread(self, pourcentageOuverture):
-        # TODO do the open
-        return True
+        time_ouverture = pourcentageOuverture/100 * self.temp_ouverture_total_volets
+        GPIO.output(PIN_VOLETS_OUVRE, GPIO.HIGH)
+        time.sleep(time_ouverture)
+        GPIO.output(PIN_VOLETS_OUVRE, GPIO.LOW)
+        self.current_ouverture_volets = time_ouverture
 
     def close_volet(self):
         if self.volet_opened:
@@ -168,8 +188,9 @@ class HardwareAccess:
             t.start()
 
     def close_volets_thread(self):
-        # TODO do the close
-        return True
+        GPIO.output(PIN_VOLETS_FERME, GPIO.HIGH)
+        time.sleep(self.current_ouverture_volets)
+        GPIO.output(PIN_VOLETS_FERME, GPIO.LOW)
 
     def control_lights(self, on):
         if on:
