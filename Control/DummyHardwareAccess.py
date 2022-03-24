@@ -71,7 +71,7 @@ class DummyHardwareAccess:
         if actions.heat_pulse_on and not self.pulse_on:
             print("heatpulse_on")
             self.pulse_on = True
-        else:
+        elif not actions.heat_pulse_on and self.pulse_on:
             print("heatpulse_off")
             self.pulse_on = False
 

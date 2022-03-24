@@ -63,7 +63,7 @@ class HardwareAccess:
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
         self.setup_gpios()
-        self.setup_serials()
+        #self.setup_serials()
 
     def setup_gpios(self):
         GPIO.setmode(GPIO.BOARD)

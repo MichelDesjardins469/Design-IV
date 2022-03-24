@@ -1,10 +1,10 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from collections import namedtuple
 import numpy as np
 from UI import ComponentKeys
 
 TRESHOLD_TEMP_EXT = 15
-TRESHOLD_TOO_HUM = 0.15
+TRESHOLD_TOO_HUM = 15
 
 actions = namedtuple(
     "actions",
@@ -114,7 +114,7 @@ class ControlLogic:
         open = False
         if (
             datetime.now().time() > self.time_light_open.time()
-            and datetime.now().time() < self.time_light_close.time()
+            or datetime.now().time() < self.time_light_close.time()
         ):
             open = True
         return open
@@ -126,27 +126,27 @@ class ControlLogic:
         if id == 1:
             if now > self.next_water_1:
                 retour = True
-                self.next_water_1 = self.next_water_1 + datetime.timedelta(
+                self.next_water_1 = self.next_water_1 + timedelta(
                     # this should probably be minutes
-                    hours=self.freq_water_1
+                    minutes=self.freq_water_1
                 )
         elif id == 2:
             if now > self.next_water_2:
                 retour = True
-                self.next_water_2 = self.next_water_2 + datetime.timedelta(
-                    hours=self.freq_water_2
+                self.next_water_2 = self.next_water_2 + timedelta(
+                    minutes=self.freq_water_2
                 )
         elif id == 3:
             if now > self.next_water_3:
                 retour = True
-                self.next_water_3 = self.next_water_3 + datetime.timedelta(
-                    hours=self.freq_water_3
+                self.next_water_3 = self.next_water_3 + timedelta(
+                    minutes=self.freq_water_3
                 )
         elif id == 4:
             if now > self.next_water_4:
                 retour = True
-                self.next_water_4 = self.next_water_4 + datetime.timedelta(
-                    hours=self.freq_water_4
+                self.next_water_4 = self.next_water_4 + timedelta(
+                    minutes=self.freq_water_4
                 )
         return retour
 
