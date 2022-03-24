@@ -16,7 +16,7 @@ PIN_VALVE_1 = 21
 PIN_VALVE_2 = 22
 PIN_VALVE_3 = 24
 PIN_VALVE_4 = 26
-#FREQ_PWM = 0.0083333  # dure 2 minute
+# FREQ_PWM = 0.0083333  # dure 2 minute
 FREQ_PWM = 2
 DUTY_CYCLE = 50
 WATER_DURATION = 5
@@ -66,7 +66,7 @@ class HardwareAccess:
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
         self.setup_gpios()
-        #self.setup_serials()
+        # self.setup_serials()
 
     def setup_gpios(self):
         GPIO.setmode(GPIO.BOARD)
@@ -127,15 +127,15 @@ class HardwareAccess:
             self.close_volet()
 
         water_ids = []
-        if(actions.water_1_on):
+        if actions.water_1_on:
             water_ids.append(1)
-        if(actions.water_2_on):
+        if actions.water_2_on:
             water_ids.append(2)
-        if(actions.water_3_on):
+        if actions.water_3_on:
             water_ids.append(3)
-        if(actions.water_4_on):
+        if actions.water_4_on:
             water_ids.append(4)
-        
+
         if len(water_ids) != 0:
             self.watering(water_ids)
 
@@ -165,12 +165,11 @@ class HardwareAccess:
             pin = PIN_VALVE_3
         elif section_id == 4:
             pin = PIN_VALVE_4
-        
+
         # pour l'instant j'assume que les valves sont on/off
         GPIO.output(pin, GPIO.HIGH)
         time.sleep(WATER_DURATION)
         GPIO.output(pin, GPIO.LOW)
-
 
     def control_fan(self, on):
         if on:
@@ -188,7 +187,7 @@ class HardwareAccess:
 
     # pas certain qu'on ait besoin de faire 2 fonctions differentes pour l'ouverture et la fermeture
     def open_volets_thread(self, pourcentageOuverture):
-        time_ouverture = pourcentageOuverture/100 * self.temp_ouverture_total_volets
+        time_ouverture = pourcentageOuverture / 100 * self.temp_ouverture_total_volets
         GPIO.output(PIN_VOLETS_OUVRE, GPIO.HIGH)
         time.sleep(time_ouverture)
         GPIO.output(PIN_VOLETS_OUVRE, GPIO.LOW)
@@ -327,15 +326,14 @@ class HardwareAccess:
         splits_co2 = line_co2.split(":")
 
         readings = complete_readings(
-                            float(splits_temp[0]),
-                            float(splits_temp[1]), 
-                            float(splits_temp[2]), 
-                            float(splits_hum[0]), 
-                            float(splits_hum[1]), 
-                            float(splits_hum[2]), 
-                            float(splits_co2[0]), 
-                            float(splits_co2[1]))
+            float(splits_temp[0]),
+            float(splits_temp[1]),
+            float(splits_temp[2]),
+            float(splits_hum[0]),
+            float(splits_hum[1]),
+            float(splits_hum[2]),
+            float(splits_co2[0]),
+            float(splits_co2[1]),
+        )
         time.sleep(1)
         return readings
-
-

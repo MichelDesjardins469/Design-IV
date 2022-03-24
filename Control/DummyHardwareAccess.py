@@ -88,15 +88,15 @@ class DummyHardwareAccess:
             self.close_volet()
 
         water_ids = []
-        if(actions.water_1_on):
+        if actions.water_1_on:
             water_ids.append(1)
-        if(actions.water_2_on):
+        if actions.water_2_on:
             water_ids.append(2)
-        if(actions.water_3_on):
+        if actions.water_3_on:
             water_ids.append(3)
-        if(actions.water_4_on):
+        if actions.water_4_on:
             water_ids.append(4)
-        
+
         if len(water_ids) != 0:
             self.watering(water_ids)
 
@@ -120,7 +120,6 @@ class DummyHardwareAccess:
         # open valve
         time.sleep(WATER_DURATION)
         # close valve
-
 
     def control_fan(self, on):
         if on:
@@ -273,16 +272,15 @@ class DummyHardwareAccess:
         splits_co2 = line_co2.split(":")
 
         readings = complete_readings(
-                            float(splits_temp[0]),
-                            float(splits_temp[1]), 
-                            float(splits_temp[2]), 
-                            float(splits_hum[0]), 
-                            float(splits_hum[1]), 
-                            float(splits_hum[2]), 
-                            float(splits_co2[0]), 
-                            float(splits_co2[1]))
+            float(splits_temp[0]),
+            float(splits_temp[1]),
+            float(splits_temp[2]),
+            float(splits_hum[0]),
+            float(splits_hum[1]),
+            float(splits_hum[2]),
+            float(splits_co2[0]),
+            float(splits_co2[1]),
+        )
         time.sleep(5)
         print(readings)
         return readings
-
-
