@@ -5,6 +5,7 @@ import serial
 import RPi.GPIO as GPIO
 import threading
 import time
+from queue import Queue
 
 PIN_HEATER = 8
 PIN_VOLETS_OUVRE = 3
@@ -17,8 +18,10 @@ PIN_VALVE_2 = 22
 PIN_VALVE_3 = 24
 PIN_VALVE_4 = 26
 # FREQ_PWM = 0.0083333  # dure 2 minute
-FREQ_PWM = 2
-DUTY_CYCLE = 50
+# FREQ_PWM = 2
+# DUTY_CYCLE = 50
+PWM_DURATION = 60
+
 WATER_DURATION = 5
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
@@ -47,7 +50,8 @@ class HardwareAccess:
         self.test_file_co2_line = 0
         self.temp_ouverture_total_volets = 5
         self.current_ouverture_volets = 0
-        self.pulsing = None
+        self.queue_pwm = None
+        self.thread_pwm = None
 
     def __del__(self):
         self.list_serials = None
@@ -61,11 +65,15 @@ class HardwareAccess:
         self.test_file_co2_line = None
         self.temp_ouverture_total_volets = None
         self.current_ouverture_volets = None
-        self.pulsing = None
+        self.queue_pwm.join()
+        self.thread_pwm.join()
+        self.queue_pwm = None
+        self.thread_pwm = None
 
     def setup_hardware_access(self):
         self._key_lock = threading.Lock()
         self.setup_gpios()
+        self.setup_pwm()
         # self.setup_serials()
 
     def setup_gpios(self):
@@ -80,7 +88,6 @@ class HardwareAccess:
         GPIO.setup(PIN_VALVE_2, GPIO.OUT)
         GPIO.setup(PIN_VALVE_3, GPIO.OUT)
         GPIO.setup(PIN_VALVE_4, GPIO.OUT)
-        self.pulsing = GPIO.PWM(PIN_HEATER, FREQ_PWM)
         GPIO.output(PIN_HEATER, GPIO.LOW)
         GPIO.output(PIN_VOLETS_OUVRE, GPIO.LOW)
         GPIO.output(PIN_VOLETS_FERME, GPIO.LOW)
@@ -104,14 +111,20 @@ class HardwareAccess:
             )
             self.list_serials.append(ser)
 
+    def setup_pwm(self):
+        self.queue_pwm = Queue(maxsize=0)
+        self.thread_pwm = threading.Thread(target=self.pwm)
+        self.thread_pwm.setDaemon(True)
+        self.thread_pwm.start()
+
     def traitement_actions(self, actions):
         self.control_lights(actions.lights_turn_on)
 
         if actions.heat_pulse_on and not self.pulse_on:
-            self.pulsing.start(DUTY_CYCLE)
+            self.control_pwm(True)
             self.pulse_on = True
         elif not actions.heat_pulse_on and self.pulse_on:
-            self.pulsing.stop()
+            self.control_pwm(False)
             self.pulse_on = False
 
         if actions.heat_turn_on:
@@ -219,6 +232,32 @@ class HardwareAccess:
         else:
             GPIO.output(PIN_HEATER, GPIO.LOW)
             self.heat_on = False
+
+    def control_pwm(self, start):
+        if start:
+            self.queue_pwm.put(True)
+        else:
+            GPIO.ouput(PIN_HEATER, GPIO.LOW)
+            self.queue_pwm.put(False)
+
+    def pwm(self):
+        working = False
+        while True:
+            if not self.queue_pwm.empty():
+                working = self.queue_pwm.get()
+                self.queue_pwm.task_done()
+
+            if working:
+                GPIO.output(PIN_HEATER, GPIO.HIGH)
+                time.sleep(PWM_DURATION)
+                if not self.queue_pwm.empty():
+                    working = self.queue_pwm.get()
+                    self.queue_pwm.task_done()
+                if working:
+                    GPIO.output(PIN_HEATER, GPIO.LOW)
+                    time.sleep(PWM_DURATION)
+            else:
+                time.sleep(0.5)
 
     def get_lecture_sensors(self):
         results_int = []
