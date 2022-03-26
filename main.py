@@ -30,13 +30,18 @@ def main():
 
 def actionLoop():
     co2_level = 0
+    timeCount = 0
     while True:
         # ping_watchdog()
         if interface.window_down:
             break
         changements = interface.checkChangements()
-        if changements:
+        timeCount += 1
+        if (
+            changements or timeCount > 60
+        ):  # on met un timecount pour saver les etats courant une fois de temps en temps
             # logic.update(changements)
+            timeCount = 0
             valuesSaver.updateValues(interface.getValues())
         co2_level += 1
         if co2_level > 5:

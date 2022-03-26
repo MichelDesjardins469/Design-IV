@@ -33,5 +33,11 @@
     "NextWater4": "18/12/2099 11:11",
     "ZoneChoisie": 1,
     "SliderPompe": 35.0,
-    "VoletsTempsOuverture": 15
+    "VoletsTempsOuverture": 15,
+    "heat_on": 1,
+    "lights_on": 1,
+    "volet_opend": 0,
+    "fan_on": 1,
+    "pulse_on": 0,
+    "current_ouverture_volet": 0
 }

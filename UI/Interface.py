@@ -107,11 +107,13 @@ class Interface:
         for key in dictValues._asdict():
             self.window[key].update(getattr(dictValues, key))
 
+    def updateStateValues(self, stateValues):
+        self.values.update(stateValues)
+
     def runInterface(self, config_file, q):
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
         time_count = 0
-
         while True:
             self.event, self.values = self.window.read(timeout=500)
             time_count += 1
