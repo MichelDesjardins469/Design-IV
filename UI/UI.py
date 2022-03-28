@@ -1,8 +1,6 @@
 import PySimpleGUI as sg
 from UI import ComponentKeys, Combos
 
-# range des temps et humidite
-
 
 def Slider2button(
     text, keySub, keySlider, keyAdd, keyRange, minValue, maxValue, defaultValue
@@ -82,11 +80,11 @@ def controleHeures(
     ]
 
 
-def etatMachine(textDescription):
+def etatMachine(keyText, textDescription):
     return [
-        sg.T(textDescription),
+        sg.T(textDescription, key=keyText),
         sg.Image(
-            key=ComponentKeys.allKeys[textDescription]["StateImage"],
+            key=ComponentKeys.allKeys[keyText]["StateImage"],
             filename="UI/red_power_sign.png",
             background_color=sg.theme_background_color(),
         ),
@@ -173,11 +171,11 @@ class Components:
             ComponentKeys.allKeys["Lumiere"]["OnOffManual"],
         )
         self.frame_machines_state = [
-            etatMachine("Ventilateur"),
-            etatMachine("Moteur"),
-            etatMachine("Pompe"),
-            etatMachine("Temp"),
-            etatMachine("Lumiere"),
+            etatMachine("Ventilateur", "Ventilation"),
+            etatMachine("Moteur", "Moteur des volets"),
+            etatMachine("Pompe", "Pompe"),
+            etatMachine("Temp", "Chauffage"),
+            etatMachine("Lumiere", "Lumière"),
         ]
         self.frame_capteurs_state = [
             [

@@ -110,6 +110,16 @@ class Interface:
     def updateStateValues(self, stateValues):
         self.values.update(stateValues)
 
+    def updateStateImage(self, componentKey, state):
+        if state:
+            self.window[ComponentKeys.allKeys[componentKey]["StateImage"]].update(
+                filename="UI/green_power_sign.png"
+            )
+        else:
+            self.window[ComponentKeys.allKeys[componentKey]["StateImage"]].update(
+                filename="UI/red_power_sign.png"
+            )
+
     def runInterface(self, config_file, q):
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
@@ -144,14 +154,11 @@ class Interface:
                 if self.event == "MotorOnButton":
                     self.window["MotorOnButton"].update(button_color="green")
                     self.window["MotorOffButton"].update(button_color="grey")
+                    self.updateStateImage("Moteur", True)
                 if self.event == "MotorOffButton":
                     self.window["MotorOffButton"].update(button_color="green")
                     self.window["MotorOnButton"].update(button_color="grey")
-                if self.event == ComponentKeys.allKeys["Pompe"]["OnOffManual"]:
-                    self.controlOnOffs("Pompe")
-                    self.window[ComponentKeys.allKeys["Pompe"]["StateImage"]].update(
-                        filename="UI/green_power_sign.png"
-                    )
+                    self.updateStateImage("Moteur", False)
                 if self.event == ComponentKeys.allKeys["Pompe"]["Sub"]:
                     self.updateSlider("Pompe", False, 5)
                 if self.event == ComponentKeys.allKeys["Pompe"]["Add"]:
