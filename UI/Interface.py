@@ -146,10 +146,9 @@ class Interface:
                 self.window_down = True
                 break
             else:
-                self.value_changed = True
-                if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
-                    # sg.popup('Bonjour')
+                if self.event != sg.TIMEOUT_KEY:
                     self.value_changed = True
+                if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
                     self.controlTimers("Lumiere")
                 if self.event == "MotorOnButton":
                     self.window["MotorOnButton"].update(button_color="green")
