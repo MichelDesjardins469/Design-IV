@@ -1,12 +1,12 @@
 import PySimpleGUI as sg
-from UI import ComponentKeys, TimeStamps
+from UI import ComponentKeys, Combos
 
-# Ajouter une option rajouter de la lumiere instant si exemple is annonce gris
-# Ajouter le % d'ouverture des volets
-# ajouter de selectionner les options de 1 pompe a la fois
+# range des temps et humidite
 
 
-def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultValue):
+def Slider2button(
+    text, keySub, keySlider, keyAdd, keyRange, minValue, maxValue, defaultValue
+):
     return [
         sg.Text(text),
         sg.Button(
@@ -35,6 +35,7 @@ def Slider2button(text, keySub, keySlider, keyAdd, minValue, maxValue, defaultVa
             image_size=(25, 25),
             image_subsample=2,
         ),
+        sg.Combo(Combos.ranges, key=keyRange, default_value=10),
     ]
 
 
@@ -59,11 +60,11 @@ def controleHeures(
     return [
         [
             sg.Text("Heure d'allumage"),
-            sg.Combo(TimeStamps.hours, key=keyHeuresA, default_value=8),
-            sg.Combo(TimeStamps.minutes, key=keyMinutesA, default_value=0),
+            sg.Combo(Combos.hours, key=keyHeuresA, default_value=8),
+            sg.Combo(Combos.minutes, key=keyMinutesA, default_value=0),
             sg.Text("Heure d'éteignement"),
-            sg.Combo(TimeStamps.hours, key=keyHeuresE, default_value=16),
-            sg.Combo(TimeStamps.minutes, key=keyMinutesE, default_value=0),
+            sg.Combo(Combos.hours, key=keyHeuresE, default_value=16),
+            sg.Combo(Combos.minutes, key=keyMinutesE, default_value=0),
             sg.Checkbox(
                 "Ne pas considérer les minuteurs",
                 key=keyCheckBoxTimers,
@@ -100,6 +101,7 @@ class Components:
                 ComponentKeys.allKeys["Temp"]["Sub"],
                 ComponentKeys.allKeys["Temp"]["Slider"],
                 ComponentKeys.allKeys["Temp"]["Add"],
+                ComponentKeys.allKeys["Temp"]["Range"],
                 0,
                 35,
                 20,
@@ -109,6 +111,7 @@ class Components:
                 ComponentKeys.allKeys["Humidity"]["Sub"],
                 ComponentKeys.allKeys["Humidity"]["Slider"],
                 ComponentKeys.allKeys["Humidity"]["Add"],
+                ComponentKeys.allKeys["Humidity"]["Range"],
                 0,
                 100,
                 80,
@@ -118,6 +121,7 @@ class Components:
                 ComponentKeys.allKeys["CO2"]["Sub"],
                 ComponentKeys.allKeys["CO2"]["Slider"],
                 ComponentKeys.allKeys["CO2"]["Add"],
+                ComponentKeys.allKeys["CO2"]["Range"],
                 400,
                 1000,
                 600,
@@ -139,21 +143,20 @@ class Components:
                 ),
             ],
             Slider2button(
-                "Nombre d'arrosage par heure",
+                "Temps entre les arrosage(min)",
                 ComponentKeys.allKeys["Pompe"]["Sub"],
                 ComponentKeys.allKeys["Pompe"]["Slider"],
                 ComponentKeys.allKeys["Pompe"]["Add"],
-                1,
-                60,
+                ComponentKeys.allKeys["Pompe"]["Range"],
+                0,
+                120,
                 10,
             ),
         ]
         self.frame_hours_control_moteur = [
             [
                 sg.T("Temps d'ouverture des volets(s) : "),
-                sg.Combo(
-                    TimeStamps.minutes, key="VoletsTempsOuverture", default_value=10
-                ),
+                sg.Combo(Combos.minutes, key="VoletsTempsOuverture", default_value=10),
             ],
             [
                 sg.Button("Ouvrir", key="MotorOnButton", button_color="grey"),
@@ -220,6 +223,7 @@ class Components:
                     self.frame_inputs_layout,
                     font="Any 12",
                     title_color="white",
+                    element_justification="r",
                 )
             ],
             [

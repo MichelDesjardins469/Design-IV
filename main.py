@@ -52,7 +52,7 @@ def actionLoop():
         q.put(readings)
         q.join()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
-        actions = logic.logic_loop(readings)
+        # actions = logic.logic_loop(readings)
         # hardware.traitement_actions(actions)
         time.sleep(0.5)
 

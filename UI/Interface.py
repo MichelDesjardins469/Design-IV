@@ -124,7 +124,6 @@ class Interface:
             readings = q.get()
             for key in readings._asdict():
                 self.window[key].update(getattr(readings, key))
-
             self.window["HumidMoy"].update(
                 (getattr(readings, "hum_int_1") + getattr(readings, "hum_int_2")) / 2
             )

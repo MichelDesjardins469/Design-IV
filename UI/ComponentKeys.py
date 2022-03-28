@@ -13,7 +13,7 @@ humidityKeys = {
     "Range": "HumidRange",
 }
 
-CO2Keys = {"Sub": "CO2Sub", "Slider": "SliderCO2", "Add": "CO2Add"}
+CO2Keys = {"Sub": "CO2Sub", "Slider": "SliderCO2", "Add": "CO2Add", "Range": "CO2Range"}
 
 ventsKeys = {
     "AllumeH": "AllumeVentsH",
@@ -31,6 +31,7 @@ pompeKeys = {
     "Add": "PompeAdd",
     "OnOffManual": "PompeOnOffManual",
     "StateImage": "PompeStateImage",
+    "Range": "PompeRange",
 }
 moteurKeys = {
     "AllumeH": "AllumeMoteurH",
