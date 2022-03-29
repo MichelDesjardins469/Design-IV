@@ -45,18 +45,18 @@ def actionLoop():
             # changements = False
             timeCount = 0
             valuesSaver.updateValues(interface.getValues())
-        co2_level += 100
+        co2_level += 300
         if co2_level > valuesSaver.getValues()["SliderCO2"]:
             interface.CO2NiveauCritiquePopup()
-            # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
             co2_level = 0
-        readings = hardware.get_lecture_sensors_test_random()
+        # readings = hardware.get_lecture_sensors_test_random()
+        readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         q.put(readings)
         q.join()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
         # actions = logic.logic_loop(readings)
         # hardware.traitement_actions(actions)
-        time.sleep(0.5)
+        time.sleep(3)
 
 
 def setup():

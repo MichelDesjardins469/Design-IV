@@ -2,6 +2,7 @@ import PySimpleGUI as sg
 from UI import ComponentKeys, UI
 
 sg.theme("DarkTeal12")
+# calcul du next water lorsque ça éteint
 
 
 class Interface:
@@ -125,22 +126,25 @@ class Interface:
         self.setValues(config_file)
         time_count = 0
         while True:
-            self.event, self.values = self.window.read(timeout=500)
+            self.event, self.values = self.window.read(timeout=1)
             time_count += 1
-            if self.co2_danger and time_count > 7200:
+            if self.co2_danger and time_count > 10000:
                 event, values = UI.CO2NiveauCritiquePopup()
                 self.co2_danger = False
                 time_count = 0
-            readings = q.get()
-            for key in readings._asdict():
-                self.window[key].update(getattr(readings, key))
-            self.window["HumidMoy"].update(
-                (getattr(readings, "hum_int_1") + getattr(readings, "hum_int_2")) / 2
-            )
-            self.window["TempMoy"].update(
-                (getattr(readings, "temp_int_1") + getattr(readings, "temp_int_2")) / 2
-            )
-            q.task_done()
+            if time_count % 3000 == 0:
+                readings = q.get()
+                for key in readings._asdict():
+                    self.window[key].update(getattr(readings, key))
+                self.window["HumidMoy"].update(
+                    (getattr(readings, "hum_int_1") + getattr(readings, "hum_int_2"))
+                    / 2
+                )
+                self.window["TempMoy"].update(
+                    (getattr(readings, "temp_int_1") + getattr(readings, "temp_int_2"))
+                    / 2
+                )
+                q.task_done()
             # main logic from down here
             if self.event in (None, "Exit", "Cancel", sg.WINDOW_CLOSED):
                 self.window_down = True
