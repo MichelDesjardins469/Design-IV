@@ -22,7 +22,7 @@ def getValeurs():
         high = resp[3]
         low = resp[4]
         co2 = (high * 256) + low
-    except TypeError:
+    except IndexError:
         return (t, h, -1)
 
     # envoie info:
