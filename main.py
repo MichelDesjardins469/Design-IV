@@ -8,6 +8,7 @@ from Control.ControlLogic import ControlLogic
 from Utils.ValuesSaver import ValuesSaver
 from queue import Queue
 
+# copier le cotenu de config_test dans config.json
 # config_file = "Utils/config.json"
 config_file_path = "Utils/config_test.json"
 hardware = DummyHardwareAccess()
@@ -44,8 +45,8 @@ def actionLoop():
             # changements = False
             timeCount = 0
             valuesSaver.updateValues(interface.getValues())
-        co2_level += 1
-        if co2_level > 5:
+        co2_level += 100
+        if co2_level > valuesSaver.getValues()["SliderCO2"]:
             interface.CO2NiveauCritiquePopup()
             # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
             co2_level = 0

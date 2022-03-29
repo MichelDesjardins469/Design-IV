@@ -142,7 +142,7 @@ class Interface:
             )
             q.task_done()
             # main logic from down here
-            if self.event in (None, "Exit", "Cancel"):
+            if self.event in (None, "Exit", "Cancel", sg.WINDOW_CLOSED):
                 self.window_down = True
                 break
             else:
@@ -162,11 +162,6 @@ class Interface:
                     self.updateSlider("Pompe", False, 5)
                 if self.event == ComponentKeys.allKeys["Pompe"]["Add"]:
                     self.updateSlider("Pompe", True, 5)
-                # if self.event == ComponentKeys.allKeys["Pompe"]["Slider"]:
-                #    zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
-                #    self.values["FreqWater" + str(zone)] = self.values[
-                #        ComponentKeys.allKeys["Pompe"]["Slider"]
-                #    ]
                 if self.event == ComponentKeys.allKeys["CO2"]["Sub"]:
                     self.updateSlider("CO2", False, 10)
                 if self.event == ComponentKeys.allKeys["CO2"]["Add"]:
