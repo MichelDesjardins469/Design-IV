@@ -132,17 +132,29 @@ class Interface:
                 event, values = UI.CO2NiveauCritiquePopup()
                 self.co2_danger = False
                 time_count = 0
-            if time_count % 3000 == 0:
+            if time_count % 500 == 0:
                 readings = q.get()
                 for key in readings._asdict():
                     self.window[key].update(getattr(readings, key))
                 self.window["HumidMoy"].update(
-                    (getattr(readings, "hum_int_1") + getattr(readings, "hum_int_2"))
-                    / 2
+                    round(
+                        (
+                            getattr(readings, "hum_int_1")
+                            + getattr(readings, "hum_int_2")
+                        )
+                        / 2,
+                        2,
+                    )
                 )
                 self.window["TempMoy"].update(
-                    (getattr(readings, "temp_int_1") + getattr(readings, "temp_int_2"))
-                    / 2
+                    round(
+                        (
+                            getattr(readings, "temp_int_1")
+                            + getattr(readings, "temp_int_2")
+                        )
+                        / 2,
+                        2,
+                    )
                 )
                 q.task_done()
             # main logic from down here
