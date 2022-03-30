@@ -14,7 +14,10 @@ class Interface:
         self.event = None
         self.co2_danger = False
         self.window = sg.Window(
-            "Contrôle de la serre", self.layout, element_justification="c"
+            "Contrôle de la serre",
+            self.layout,
+            element_justification="c",
+            size=(1024, 600),
         )
 
     def __del__(self):
@@ -132,8 +135,9 @@ class Interface:
                 event, values = UI.CO2NiveauCritiquePopup()
                 self.co2_danger = False
                 time_count = 0
-            if time_count % 500 == 0:
+            if not q.empty():
                 readings = q.get()
+                q.task_done()
                 for key in readings._asdict():
                     self.window[key].update(getattr(readings, key))
                 self.window["HumidMoy"].update(
@@ -156,9 +160,9 @@ class Interface:
                         2,
                     )
                 )
-                q.task_done()
+
             # main logic from down here
-            if self.event in (None, "Exit", "Cancel", sg.WINDOW_CLOSED):
+            if self.event in (None, "Exit", "Fermer", sg.WINDOW_CLOSED):
                 self.window_down = True
                 break
             else:

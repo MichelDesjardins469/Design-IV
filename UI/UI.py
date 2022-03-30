@@ -179,38 +179,34 @@ class Components:
         ]
         self.frame_capteurs_state = [
             [
-                sg.T("Température ambiante : ", font=("Any 9")),
-                sg.T("20", key="TempMoy", font=("Any 9")),
+                sg.T("Température ambiante : "),
+                sg.T("20", key="TempMoy"),
+                sg.T("Humidité moyenne : "),
+                sg.T("", key="HumidMoy"),
             ],
             [
-                sg.T("Température capteur 1 : ", font=("Any 9")),
-                sg.T("", key="temp_int_1", font=("Any 9")),
-                sg.T("Température capteur 2 : ", font=("Any 9")),
-                sg.T("", key="temp_int_2", font=("Any 9")),
+                sg.T("Température capteur 1 : "),
+                sg.T("", key="temp_int_1"),
+                sg.T("Humidité capteur 1 : "),
+                sg.T("", key="hum_int_1"),
             ],
             [
-                sg.T("Température extérieure: ", font=("Any 9")),
-                sg.T("", key="temp_ext", font=("Any 9")),
+                sg.T("Température capteur 2 : "),
+                sg.T("", key="temp_int_2"),
+                sg.T("Humidité capteur 2 : "),
+                sg.T("", key="hum_int_2"),
             ],
             [
-                sg.T("Humidité moyenne : ", font=("Any 9")),
-                sg.T("", key="HumidMoy", font=("Any 9")),
+                sg.T("Température extérieure: "),
+                sg.T("", key="temp_ext"),
+                sg.T("Humidité extérieure: "),
+                sg.T("", key="hum_ext"),
             ],
             [
-                sg.T("Humidité capteur 1 : ", font=("Any 9")),
-                sg.T("", key="hum_int_1", font=("Any 9")),
-                sg.T("Humidité capteur 2 : ", font=("Any 9")),
-                sg.T("", key="hum_int_2", font=("Any 9")),
-            ],
-            [
-                sg.T("Humidité extérieure: ", font=("Any 9")),
-                sg.T("", key="hum_ext", font=("Any 9")),
-            ],
-            [
-                sg.T("CO2 capteur 1 : ", font=("Any 9")),
-                sg.T("", key="CO2_int_1", font=("Any 9")),
-                sg.T("CO2 capteur 2 : ", font=("Any 9")),
-                sg.T("", key="CO2_int_2", font=("Any 9")),
+                sg.T("CO2 capteur 1 : "),
+                sg.T("", key="CO2_int_1"),
+                sg.T("CO2 capteur 2 : "),
+                sg.T("", key="CO2_int_2"),
             ],
         ]
 
@@ -219,33 +215,27 @@ class Components:
                 sg.Frame(
                     "Variables contrôlables",
                     self.frame_inputs_layout,
-                    font="Any 12",
                     title_color="white",
                     element_justification="r",
-                )
+                ),
+                sg.Frame(
+                    "État de la machinerie",
+                    self.frame_machines_state,
+                    title_color="white",
+                    element_justification="right",
+                ),
             ],
             [
                 sg.Frame(
                     "Contrôle des Pompes",
                     self.frame_hours_control_pompe,
-                    font="Any 12",
                     title_color="white",
-                )
-            ],
-            [
-                sg.Frame(
-                    "Contrôle des moteurs des volets",
-                    self.frame_hours_control_moteur,
-                    font="Any 12",
-                    title_color="white",
-                    element_justification="c",
                 )
             ],
             [
                 sg.Frame(
                     "Contrôle de la lumière",
                     self.frame_hours_control_lumiere,
-                    font="Any 12",
                     title_color="white",
                 )
             ],
@@ -253,18 +243,17 @@ class Components:
                 sg.Frame(
                     "Valeurs des capteurs",
                     self.frame_capteurs_state,
-                    font="Any 12",
                     title_color="white",
                 ),
                 sg.Frame(
-                    "État de la machinerie",
-                    self.frame_machines_state,
-                    font="Any 12",
+                    "Contrôle des moteurs des volets",
+                    self.frame_hours_control_moteur,
                     title_color="white",
-                    element_justification="right",
+                    element_justification="c",
                 ),
             ],
-            [sg.Button("Soumettre", bind_return_key=True), sg.Cancel()],
+            [],
+            [sg.Button("Soumettre", bind_return_key=True), sg.Cancel("Fermer")],
         ]
 
     def __del__(self):
