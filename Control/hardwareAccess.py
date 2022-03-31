@@ -28,8 +28,6 @@ WATER_DURATION = 5
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
-
-
 complete_readings = namedtuple(
     "complete_readings",
     "temp_int_1 temp_int_2 temp_ext hum_int_1 hum_int_2 hum_ext CO2_int_1 CO2_int_2",
@@ -74,7 +72,7 @@ class HardwareAccess:
         self._key_lock = threading.Lock()
         self.setup_gpios()
         self.setup_pwm()
-        #self.setup_serials()
+        # self.setup_serials()
 
     def setup_gpios(self):
         GPIO.setmode(GPIO.BOARD)
@@ -271,13 +269,13 @@ class HardwareAccess:
                 # results_int.append(None)
             else:
                 splits = reading.decode("utf-8").split(":")
-                #if splits[2] == -1:
+                # if splits[2] == -1:
                 #    result_ext = splits
-                #else:
+                # else:
                 #    results_int.append(splits)
                 results_int.append(splits)
-        
-        #return complete_readings(
+
+        # return complete_readings(
         #    float(results_int[0][0]),
         #    float(results_int[1][0]),
         #    float(result_ext[0]),
@@ -286,8 +284,8 @@ class HardwareAccess:
         #    float(result_ext[1]),
         #    float(results_int[0][2]),
         #    float(results_int[1][2]),
-        #)
-    
+        # )
+
         return complete_readings(
             float(results_int[0][0]),
             float(results_int[1][0]),
@@ -314,7 +312,7 @@ class HardwareAccess:
         for t in threads:
             t.join()
 
-        #return complete_readings(
+        # return complete_readings(
         #    float(results_int[0][0]),
         #    float(results_int[1][0]),
         #    float(result_ext[0][0]),
@@ -323,7 +321,7 @@ class HardwareAccess:
         #    float(result_ext[1]),
         #    float(results_int[0][2]),
         #    float(results_int[1][2]),
-        #)
+        # )
         return complete_readings(
             float(results_int[0][0]) - BIAIS_TEMP,
             float(results_int[1][0]) - BIAIS_TEMP,
@@ -336,7 +334,7 @@ class HardwareAccess:
         )
 
     def contact_sensor(self, serial, output_int, output_ext):
-        print("calling sensor one of sensors") 
+        print("calling sensor one of sensors")
         serial.write(b"run\n")
         reading = serial.readline()
         if reading == b"":
@@ -344,7 +342,7 @@ class HardwareAccess:
             # results_int.append(None)
         else:
             splits = reading.decode("utf-8").split(":")
-            #if splits[2] == -1:
+            # if splits[2] == -1:
             if splits[2] == -100:
                 output_ext.append(splits)
             else:

@@ -47,7 +47,7 @@ def actionLoop(q):
             valuesSaver.updateValues(interface.getValues())
         readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         # readings = hardware.get_lecture_sensors_test_random()
-        #readings = hardware.get_lecture_sensors_test_simulated("test_focus_water_and_lights")
+        # readings = hardware.get_lecture_sensors_test_simulated("test_focus_water_and_lights")
         co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
         if co2_level > valuesSaver.getValues()["SliderCO2"]:
             interface.CO2NiveauCritiquePopup()

@@ -24,7 +24,7 @@ class Interface:
             self.layout,
             element_justification="c",
             no_titlebar=True,
-            size=(1024, 600)
+            size=(1024, 600),
         )
 
     def __del__(self):
