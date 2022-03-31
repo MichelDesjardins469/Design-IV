@@ -21,12 +21,12 @@ interface = Interface(components)
 def main():
     config_file = setup()
     q = Queue()
-    t_1 = Thread(target=interface.runInterface, args=(config_file, q))
+    # t_1 = Thread(target=interface.runInterface, args=(config_file, q))
     t_2 = Thread(target=actionLoop, args=(q,))
-    t_1.start()
-    # t_2.start()
-    t_1.join()
-    # t_2.join()
+    # t_1.start()
+    t_2.start()
+    # t_1.join()
+    t_2.join()
 
 
 def actionLoop(q):
@@ -36,8 +36,9 @@ def actionLoop(q):
         # ping_watchdog()
         if interface.window_down:
             break
-        changements = interface.checkChangements()
+        # changements = interface.checkChangements()
         timeCount += 1
+        changements = False
         if (
             changements or timeCount > 60
         ):  # on met un timecount pour saver les etats courant une fois de temps en temps
@@ -51,10 +52,17 @@ def actionLoop(q):
             co2_level = 0
         # readings = hardware.get_lecture_sensors_test_random()
         readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
-        q.put(readings)
-        q.join()
+        # q.put(readings)
+        # q.join()
         # print("La température est de :" + str(readings.temp_int) + "˚C")
         actions = logic.logic_loop(readings)
+        waterReadings = {
+            "NextWater1": logic.next_water_1.strftime("%d/%m/%Y %H:%M"),
+            "NextWater2": logic.next_water_2.strftime("%d/%m/%Y %H:%M"),
+            "NextWater3": logic.next_water_3.strftime("%d/%m/%Y %H:%M"),
+            "NextWater4": logic.next_water_4.strftime("%d/%m/%Y %H:%M"),
+        }
+        valuesSaver.updateValues(waterReadings)
         hardware.traitement_actions(actions)
         time.sleep(0.5)
 

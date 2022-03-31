@@ -33,7 +33,42 @@ def Slider2button(
             image_size=(25, 25),
             image_subsample=2,
         ),
+        sg.T("±"),
         sg.Combo(Combos.ranges, key=keyRange, default_value=10),
+    ]
+
+
+def Slider2ButtonNoRange(
+    text, keySub, keySlider, keyAdd, keyRange, minValue, maxValue, defaultValue
+):
+    return [
+        sg.Text(text),
+        sg.Button(
+            "",
+            key=keySub,
+            button_color=(sg.theme_background_color(), sg.theme_background_color()),
+            image_filename="UI/minus_sign.png",
+            image_size=(25, 25),
+            image_subsample=2,
+        ),
+        sg.Slider(
+            key=keySlider,
+            range=(minValue, maxValue),
+            default_value=defaultValue,
+            size=(20, 5),
+            orientation="horizontal",
+            font=("Helvetica", 12),
+            resolution=0.5,
+            enable_events=True,
+        ),
+        sg.Button(
+            "",
+            key=keyAdd,
+            button_color=(sg.theme_background_color(), sg.theme_background_color()),
+            image_filename="UI/plus_sign.png",
+            image_size=(25, 25),
+            image_subsample=2,
+        ),
     ]
 
 
@@ -140,7 +175,7 @@ class Components:
                     enable_events=True,
                 ),
             ],
-            Slider2button(
+            Slider2ButtonNoRange(
                 "Temps entre les arrosage(min)",
                 ComponentKeys.allKeys["Pompe"]["Sub"],
                 ComponentKeys.allKeys["Pompe"]["Slider"],
@@ -252,8 +287,7 @@ class Components:
                     element_justification="c",
                 ),
             ],
-            [],
-            [sg.Button("Soumettre", bind_return_key=True), sg.Cancel("Fermer")],
+            [sg.Cancel("Fermer")],
         ]
 
     def __del__(self):

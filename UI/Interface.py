@@ -17,7 +17,7 @@ class Interface:
             "Contrôle de la serre",
             self.layout,
             element_justification="c",
-            size=(1024, 600),
+            no_titlebar=True,
         )
 
     def __del__(self):
@@ -170,6 +170,8 @@ class Interface:
                     self.value_changed = True
                 if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
                     self.controlTimers("Lumiere")
+                if self.event == ComponentKeys.allKeys["Lumiere"]["OnOffManual"]:
+                    self.controlOnOffs("Lumiere")
                 if self.event == "MotorOnButton":
                     self.window["MotorOnButton"].update(button_color="green")
                     self.window["MotorOffButton"].update(button_color="grey")
@@ -194,5 +196,3 @@ class Interface:
                     self.updateSlider("Humidity", False, 2)
                 if self.event == ComponentKeys.allKeys["Humidity"]["Add"]:
                     self.updateSlider("Humidity", True, 2)
-                if self.event == "Soumettre":
-                    print(self.values)
