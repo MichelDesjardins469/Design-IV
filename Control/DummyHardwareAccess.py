@@ -101,7 +101,7 @@ class DummyHardwareAccess:
             self.watering(water_ids)
 
     def watering(self, section_ids):
-        t = threading.Thread(target=self.watering_thread, args=(section_ids))
+        t = threading.Thread(target=self.watering_thread, args=(section_ids,))
         t.start()
 
     def watering_thread(self, section_ids):
@@ -235,7 +235,7 @@ class DummyHardwareAccess:
 
     def get_lecture_sensors_test_random(self):
         if self.heat_on or np.random.random_integers(0, 10) <= 8:
-            temp_int = np.random.normal(23, 2)
+            temp_int = np.random.normal(18, 2)
         else:
             temp_int = np.random.normal(18, 2)
 

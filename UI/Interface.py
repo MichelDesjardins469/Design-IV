@@ -13,6 +13,12 @@ class Interface:
         self.values = None
         self.event = None
         self.co2_danger = False
+        self.states = {
+            "heat_on": False,
+            "water_on": False,
+            "vents_on": False,
+            "lights_on": False,
+        }
         self.window = sg.Window(
             "Contrôle de la serre",
             self.layout,
@@ -112,7 +118,27 @@ class Interface:
             self.window[key].update(getattr(dictValues, key))
 
     def updateStateValues(self, stateValues):
-        self.values.update(stateValues)
+        if stateValues.heat_turn_on or stateValues.heat_pulse_on:
+            self.updateStateImage("Temp", True)
+        else:
+            self.updateStateImage("Temp", False)
+        if stateValues.vent_turn_on:
+            self.updateStateImage("Ventilateur", True)
+        else:
+            self.updateStateImage("Ventilateur", False)
+        if stateValues.lights_turn_on:
+            self.updateStateImage("Lumiere", True)
+        else:
+            self.updateStateImage("Lumiere", False)
+        if (
+            stateValues.water_1_on
+            or stateValues.water_2_on
+            or stateValues.water_3_on
+            or stateValues.water_4_on
+        ):
+            self.updateStateImage("Pompe", True)
+        else:
+            self.updateStateImage("Pompe", False)
 
     def updateStateImage(self, componentKey, state):
         if state:
