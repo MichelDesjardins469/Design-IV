@@ -63,8 +63,7 @@ def actionLoop(q):
         valuesSaver.updateValues(waterReadings)
         hardware.traitement_actions(actions)
         interface.updateStateValues(actions)
-        break
-        # time.sleep(0.5)
+        time.sleep(0.5)
 
 
 def setup():
