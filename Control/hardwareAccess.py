@@ -11,23 +11,23 @@ PIN_HEATER = 8
 PIN_VOLETS_OUVRE = 3
 PIN_VOLETS_FERME = 5
 PIN_VENT = 10
-PIN_WATER_PUMP = 19
-PIN_LIGHTS = 35
-PIN_VALVE_1 = 21
-PIN_VALVE_2 = 22
-PIN_VALVE_3 = 24
-PIN_VALVE_4 = 26
+PIN_WATER_PUMP = 11
+PIN_LIGHTS = 12
+PIN_VALVE_1 = 13
+PIN_VALVE_2 = 15
+PIN_VALVE_3 = 16
+PIN_VALVE_4 = 18
 # FREQ_PWM = 0.0083333  # dure 2 minute
 # FREQ_PWM = 2
 # DUTY_CYCLE = 50
-PWM_DURATION = 60
+PWM_DURATION = 0.5
+BIAIS_TEMP = 2.0
 
 WATER_DURATION = 5
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
 
 
-# pour fins de démonstrations
 
 
 complete_readings = namedtuple(
@@ -74,10 +74,11 @@ class HardwareAccess:
         self._key_lock = threading.Lock()
         self.setup_gpios()
         self.setup_pwm()
-        # self.setup_serials()
+        #self.setup_serials()
 
     def setup_gpios(self):
         GPIO.setmode(GPIO.BOARD)
+        GPIO.setwarnings(False)
         GPIO.setup(PIN_HEATER, GPIO.OUT)
         GPIO.setup(PIN_VOLETS_OUVRE, GPIO.OUT)
         GPIO.setup(PIN_VOLETS_FERME, GPIO.OUT)
@@ -237,7 +238,7 @@ class HardwareAccess:
         if start:
             self.queue_pwm.put(True)
         else:
-            GPIO.ouput(PIN_HEATER, GPIO.LOW)
+            GPIO.output(PIN_HEATER, GPIO.LOW)
             self.queue_pwm.put(False)
 
     def pwm(self):
@@ -270,23 +271,36 @@ class HardwareAccess:
                 # results_int.append(None)
             else:
                 splits = reading.decode("utf-8").split(":")
-                if splits[2] == -1:
-                    result_ext = splits
-                else:
-                    results_int.append(splits)
-
+                #if splits[2] == -1:
+                #    result_ext = splits
+                #else:
+                #    results_int.append(splits)
+                results_int.append(splits)
+        
+        #return complete_readings(
+        #    float(results_int[0][0]),
+        #    float(results_int[1][0]),
+        #    float(result_ext[0]),
+        #    float(results_int[0][1]),
+        #    float(results_int[1][1]),
+        #    float(result_ext[1]),
+        #    float(results_int[0][2]),
+        #    float(results_int[1][2]),
+        #)
+    
         return complete_readings(
             float(results_int[0][0]),
             float(results_int[1][0]),
-            float(result_ext[0]),
+            float(result_ext[2][2]),
             float(results_int[0][1]),
             float(results_int[1][1]),
-            float(result_ext[1]),
+            float(result_ext[2][2]),
             float(results_int[0][2]),
             float(results_int[1][2]),
         )
 
     def get_lecture_sensors_threaded(self):
+        print("callings sensors")
         results_int = []
         result_ext = []
         threads = []
@@ -300,18 +314,29 @@ class HardwareAccess:
         for t in threads:
             t.join()
 
+        #return complete_readings(
+        #    float(results_int[0][0]),
+        #    float(results_int[1][0]),
+        #    float(result_ext[0][0]),
+        #    float(results_int[0][1]),
+        #    float(results_int[1][1]),
+        #    float(result_ext[1]),
+        #    float(results_int[0][2]),
+        #    float(results_int[1][2]),
+        #)
         return complete_readings(
-            float(results_int[0][0]),
-            float(results_int[1][0]),
-            float(result_ext[0][0]),
+            float(results_int[0][0]) - BIAIS_TEMP,
+            float(results_int[1][0]) - BIAIS_TEMP,
+            float(results_int[2][0]) - BIAIS_TEMP,
             float(results_int[0][1]),
             float(results_int[1][1]),
-            float(result_ext[1]),
+            float(results_int[2][1]),
             float(results_int[0][2]),
             float(results_int[1][2]),
         )
 
     def contact_sensor(self, serial, output_int, output_ext):
+        print("calling sensor one of sensors") 
         serial.write(b"run\n")
         reading = serial.readline()
         if reading == b"":
@@ -319,12 +344,14 @@ class HardwareAccess:
             # results_int.append(None)
         else:
             splits = reading.decode("utf-8").split(":")
-            if splits[2] == -1:
+            #if splits[2] == -1:
+            if splits[2] == -100:
                 output_ext.append(splits)
             else:
                 self._key_lock.acquire()
                 output_int.append(splits)
                 self._key_lock.release()
+        print("sensor done")
 
     def get_lecture_sensors_test_random(self):
         if self.heat_on or np.random.random_integers(0, 10) <= 8:
@@ -374,5 +401,5 @@ class HardwareAccess:
             float(splits_co2[0]),
             float(splits_co2[1]),
         )
-        time.sleep(1)
+        time.sleep(5)
         return readings

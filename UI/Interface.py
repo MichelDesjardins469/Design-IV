@@ -24,6 +24,7 @@ class Interface:
             self.layout,
             element_justification="c",
             no_titlebar=True,
+            size=(1024, 600)
         )
 
     def __del__(self):
@@ -222,3 +223,5 @@ class Interface:
                     self.updateSlider("Humidity", False, 2)
                 if self.event == ComponentKeys.allKeys["Humidity"]["Add"]:
                     self.updateSlider("Humidity", True, 2)
+                if self.event == "Minimiser":
+                    self.window.Minimize()
