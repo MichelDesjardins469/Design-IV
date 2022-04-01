@@ -210,7 +210,7 @@ class Interface:
                     self.window["MotorOffButton"].update(button_color="grey")
                     self.updateStateImage("Moteur", True)
                 if self.event == "MotorOffButton":
-                    self.window["MotorOffButton"].update(button_color="green")
+                    self.window["MotorOffButton"].update(button_color="red")
                     self.window["MotorOnButton"].update(button_color="grey")
                     self.updateStateImage("Moteur", False)
                 if self.event == ComponentKeys.allKeys["Pompe"]["Sub"]:
