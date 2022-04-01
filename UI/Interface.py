@@ -117,7 +117,8 @@ class Interface:
         for key in dictValues._asdict():
             self.window[key].update(getattr(dictValues, key))
 
-    def updateStateValues(self, stateValues):
+    def updateStateValues(self, stateValues, hardware):
+        print(stateValues)
         if stateValues.heat_turn_on or stateValues.heat_pulse_on:
             self.updateStateImage("Temp", True)
         else:
@@ -139,6 +140,10 @@ class Interface:
             self.updateStateImage("Pompe", True)
         else:
             self.updateStateImage("Pompe", False)
+        if hardware.volet_opened:
+            self.updateStateImage("Moteur", True)
+        else:
+            self.updateStateImage("Moteur", False)
 
     def updateStateImage(self, componentKey, state):
         if state:
@@ -154,6 +159,7 @@ class Interface:
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
         time_count = 0
+        self.window.Maximize()
         while True:
             self.event, self.values = self.window.read(timeout=1)
             time_count += 1
