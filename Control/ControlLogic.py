@@ -126,28 +126,22 @@ class ControlLogic:
         if id == 1:
             if now > self.next_water_1:
                 retour = True
-                self.next_water_1 = self.next_water_1 + timedelta(
+                self.next_water_1 = now + timedelta(
                     # this should probably be minutes
                     minutes=self.freq_water_1
                 )
         elif id == 2:
             if now > self.next_water_2:
                 retour = True
-                self.next_water_2 = self.next_water_2 + timedelta(
-                    minutes=self.freq_water_2
-                )
+                self.next_water_2 = now + timedelta(minutes=self.freq_water_2)
         elif id == 3:
             if now > self.next_water_3:
                 retour = True
-                self.next_water_3 = self.next_water_3 + timedelta(
-                    minutes=self.freq_water_3
-                )
+                self.next_water_3 = now + timedelta(minutes=self.freq_water_3)
         elif id == 4:
             if now > self.next_water_4:
                 retour = True
-                self.next_water_4 = self.next_water_4 + timedelta(
-                    minutes=self.freq_water_4
-                )
+                self.next_water_4 = now + timedelta(minutes=self.freq_water_4)
         return retour
 
     def check_temp(self, temp_int, temp_ext):
