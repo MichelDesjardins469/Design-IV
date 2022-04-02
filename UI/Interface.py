@@ -14,10 +14,10 @@ class Interface:
         self.event = None
         self.co2_danger = False
         self.states = {
-            "heat_on": False,
-            "water_on": False,
-            "vents_on": False,
-            "lights_on": False,
+            "Temp": False,
+            "Pompe": False,
+            "Ventilateur": False,
+            "Lumiere": False,
         }
         self.window = sg.Window(
             "Contrôle de la serre",
@@ -118,33 +118,41 @@ class Interface:
         for key in dictValues._asdict():
             self.window[key].update(getattr(dictValues, key))
 
-    def updateStateValues(self, stateValues, hardware):
+    def updateStateValues(self):
+        self.updateStateImage("Temp", self.states["Temp"])
+        self.updateStateImage("Ventilateur", self.states["Ventilateur"])
+        self.updateStateImage("Pompe", self.states["Pompe"])
+        self.updateStateImage("Lumiere", self.states["Lumiere"])
+        self.updateStateImage("Moteur", self.states["Temp"])
+
+    def updateStateValuesActionLoop(self, stateValues, hardware):
         print(stateValues)
         if stateValues.heat_turn_on or stateValues.heat_pulse_on:
-            self.updateStateImage("Temp", True)
+            self.states["Temp"] = True
         else:
-            self.updateStateImage("Temp", False)
+            self.states["Temp"] = False
         if stateValues.vent_turn_on:
-            self.updateStateImage("Ventilateur", True)
+            self.states["Ventilateur"] = True
         else:
-            self.updateStateImage("Ventilateur", False)
+            self.states["Ventilateur"] = False
         if stateValues.lights_turn_on:
-            self.updateStateImage("Lumiere", True)
+            self.states["Lumiere"] = True
         else:
-            self.updateStateImage("Lumiere", False)
+            self.states["Lumiere"] = False
         if (
             stateValues.water_1_on
             or stateValues.water_2_on
             or stateValues.water_3_on
             or stateValues.water_4_on
         ):
-            self.updateStateImage("Pompe", True)
+            self.states["Pompe"] = True
         else:
-            self.updateStateImage("Pompe", False)
+            self.states["Pompe"] = False
+
         if hardware.volet_opened:
-            self.updateStateImage("Moteur", True)
+            self.states["Moteur"] = True
         else:
-            self.updateStateImage("Moteur", False)
+            self.states["Moteur"] = False
 
     def updateStateImage(self, componentKey, state):
         if state:
@@ -160,7 +168,7 @@ class Interface:
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
         time_count = 0
-        self.window.Maximize()
+        # self.window.Maximize()
         while True:
             self.event, self.values = self.window.read(timeout=1)
             time_count += 1
@@ -193,7 +201,7 @@ class Interface:
                         2,
                     )
                 )
-
+                self.updateStateValues()
             # main logic from down here
             if self.event in (None, "Exit", "Fermer", sg.WINDOW_CLOSED):
                 self.window_down = True

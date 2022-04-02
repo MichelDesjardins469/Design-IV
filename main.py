@@ -1,4 +1,4 @@
-from Control.hardwareAccess import HardwareAccess
+# from Control.hardwareAccess import HardwareAccess
 from Control.DummyHardwareAccess import DummyHardwareAccess
 import time
 from threading import Thread
@@ -10,8 +10,8 @@ from queue import Queue
 
 # copier le cotenu de config_test dans config.json
 # config_file = "Utils/config.json"
-config_file_path = "/home/pi/Desktop/git/Design-IV/Utils/config_test.json"
-hardware = HardwareAccess()
+config_file_path = "Utils/config_test.json"
+hardware = DummyHardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file_path)
 components = Components()
@@ -45,9 +45,11 @@ def actionLoop(q):
             # changements = False
             timeCount = 0
             valuesSaver.updateValues(interface.getValues())
-        readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
+        # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         # readings = hardware.get_lecture_sensors_test_random()
-        # readings = hardware.get_lecture_sensors_test_simulated("test_focus_water_and_lights")
+        readings = hardware.get_lecture_sensors_test_simulated(
+            "test_focus_water_and_lights"
+        )
         co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
         if co2_level > valuesSaver.getValues()["SliderCO2"]:
             interface.CO2NiveauCritiquePopup()
@@ -63,7 +65,7 @@ def actionLoop(q):
         }
         valuesSaver.updateValues(waterReadings)
         hardware.traitement_actions(actions)
-        interface.updateStateValues(actions, hardware)
+        interface.updateStateValuesActionLoop(actions, hardware)
         time.sleep(0.5)
 
 
