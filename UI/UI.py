@@ -12,7 +12,7 @@ def Slider2button(
             key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="UI/minus_sign.png",
-            image_size=(25, 25),
+            image_size=(35, 35),
             image_subsample=2,
         ),
         sg.Slider(
@@ -30,11 +30,17 @@ def Slider2button(
             key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="UI/plus_sign.png",
-            image_size=(25, 25),
+            image_size=(35, 35),
             image_subsample=2,
         ),
         sg.T("±"),
-        sg.Combo(Combos.ranges, key=keyRange, default_value=10, enable_events=True),
+        sg.Combo(
+            Combos.ranges,
+            key=keyRange,
+            default_value=10,
+            enable_events=True,
+            size=(10, 35),
+        ),
     ]
 
 
@@ -48,7 +54,7 @@ def Slider2ButtonNoRange(
             key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="UI/minus_sign.png",
-            image_size=(25, 25),
+            image_size=(35, 35),
             image_subsample=2,
         ),
         sg.Slider(
@@ -57,7 +63,7 @@ def Slider2ButtonNoRange(
             default_value=defaultValue,
             size=(20, 5),
             orientation="horizontal",
-            font=("Helvetica", 12),
+            # font=("Helvetica", 12),
             resolution=0.5,
             enable_events=True,
         ),
@@ -66,7 +72,7 @@ def Slider2ButtonNoRange(
             key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
             image_filename="UI/plus_sign.png",
-            image_size=(25, 25),
+            image_size=(35, 35),
             image_subsample=2,
         ),
     ]
@@ -93,11 +99,17 @@ def controleHeures(
     return [
         [
             sg.Text("Heure d'allumage"),
-            sg.Combo(Combos.hours, key=keyHeuresA, default_value=8),
-            sg.Combo(Combos.minutes, key=keyMinutesA, default_value=0),
+            sg.Combo(Combos.hours, key=keyHeuresA, default_value=8, enable_events=True),
+            sg.Combo(
+                Combos.minutes, key=keyMinutesA, default_value=0, enable_events=True
+            ),
             sg.Text("Heure d'éteignement"),
-            sg.Combo(Combos.hours, key=keyHeuresE, default_value=16),
-            sg.Combo(Combos.minutes, key=keyMinutesE, default_value=0),
+            sg.Combo(
+                Combos.hours, key=keyHeuresE, default_value=16, enable_events=True
+            ),
+            sg.Combo(
+                Combos.minutes, key=keyMinutesE, default_value=0, enable_events=True
+            ),
             sg.Checkbox(
                 "Ne pas considérer les minuteurs",
                 key=keyCheckBoxTimers,

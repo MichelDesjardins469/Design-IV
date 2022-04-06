@@ -25,6 +25,7 @@ class Interface:
             element_justification="c",
             no_titlebar=True,
             size=(1024, 600),
+            font=("Helvetica", 11),
         )
 
     def __del__(self):
