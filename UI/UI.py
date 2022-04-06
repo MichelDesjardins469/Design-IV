@@ -11,7 +11,7 @@ def Slider2button(
             "",
             key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="/home/pi/Desktop/git/Design-IV/UI/minus_sign.png",
+            image_filename="UI/minus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
@@ -29,12 +29,12 @@ def Slider2button(
             "",
             key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="/home/pi/Desktop/git/Design-IV/UI/plus_sign.png",
+            image_filename="UI/plus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
         sg.T("±"),
-        sg.Combo(Combos.ranges, key=keyRange, default_value=10),
+        sg.Combo(Combos.ranges, key=keyRange, default_value=10, enable_events=True),
     ]
 
 
@@ -47,7 +47,7 @@ def Slider2ButtonNoRange(
             "",
             key=keySub,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="/home/pi/Desktop/git/Design-IV/UI/minus_sign.png",
+            image_filename="UI/minus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
@@ -65,7 +65,7 @@ def Slider2ButtonNoRange(
             "",
             key=keyAdd,
             button_color=(sg.theme_background_color(), sg.theme_background_color()),
-            image_filename="/home/pi/Desktop/git/Design-IV/UI/plus_sign.png",
+            image_filename="UI/plus_sign.png",
             image_size=(25, 25),
             image_subsample=2,
         ),
@@ -120,7 +120,7 @@ def etatMachine(keyText, textDescription):
         sg.T(textDescription, key=keyText),
         sg.Image(
             key=ComponentKeys.allKeys[keyText]["StateImage"],
-            filename="/home/pi/Desktop/git/Design-IV/UI/red_power_sign.png",
+            filename="UI/red_power_sign.png",
             background_color=sg.theme_background_color(),
         ),
     ]

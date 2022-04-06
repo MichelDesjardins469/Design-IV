@@ -168,6 +168,7 @@ class Interface:
         self.setValues(config_file)
         time_count = 0
         # self.window.Maximize()
+
         while True:
             self.event, self.values = self.window.read(timeout=1)
             time_count += 1
@@ -238,4 +239,3 @@ class Interface:
                     self.updateSlider("Humidity", True, 2)
                 if self.event == "Minimiser":
                     self.window.Minimize()
-            
