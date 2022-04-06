@@ -239,3 +239,4 @@ class Interface:
                     self.updateSlider("Humidity", True, 2)
                 if self.event == "Minimiser":
                     self.window.Minimize()
+            
