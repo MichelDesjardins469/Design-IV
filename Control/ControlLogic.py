@@ -14,6 +14,26 @@ actions = namedtuple(
 
 class ControlLogic:
     def __init__(self, config):
+        self.loadConfig(config)
+
+    def __del__(self):
+        self.target_temp = None
+        self.range_temp = None
+        self.target_hum = None
+        self.range_hum = None
+        self.time_light_open = None
+        self.time_light_close = None
+        self.freq_water_1 = None
+        self.next_water_1 = None
+        self.freq_water_2 = None
+        self.next_water_2 = None
+        self.freq_water_3 = None
+        self.next_water_3 = None
+        self.freq_water_4 = None
+        self.next_water_4 = None
+        self.free_hum = None
+
+    def loadConfig(self, config):
         self.target_temp = config[ComponentKeys.allKeys["Temp"]["Slider"]]
         self.range_temp = config[ComponentKeys.allKeys["Temp"]["Range"]]
         self.target_hum = config[ComponentKeys.allKeys["Humidity"]["Slider"]]
@@ -45,26 +65,6 @@ class ControlLogic:
         self.next_water_3 = datetime.strptime(config["NextWater3"], "%d/%m/%Y %H:%M")
         self.next_water_4 = datetime.strptime(config["NextWater4"], "%d/%m/%Y %H:%M")
         self.free_hum = config["HumidFree"]
-
-    def __del__(self):
-        self.target_temp = None
-        self.range_temp = None
-        self.target_hum = None
-        self.range_hum = None
-        self.time_light_open = None
-        self.time_light_close = None
-        self.freq_water_1 = None
-        self.next_water_1 = None
-        self.freq_water_2 = None
-        self.next_water_2 = None
-        self.freq_water_3 = None
-        self.next_water_3 = None
-        self.freq_water_4 = None
-        self.next_water_4 = None
-        self.free_hum = None
-
-    def update(self, changes):
-        pass
 
     def logic_loop(self, sensorReadings):
         mean_temp = np.mean([sensorReadings.temp_int_1, sensorReadings.temp_int_2])
