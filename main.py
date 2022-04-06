@@ -41,7 +41,7 @@ def actionLoop(q):
         if (
             changements or timeCount > 60
         ):  # on met un timecount pour saver les etats courant une fois de temps en temps
-            # logic.update(changements)
+            logic.loadConfig(interface.getValues())
             # changements = False
             timeCount = 0
             valuesSaver.updateValues(interface.getValues())

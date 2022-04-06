@@ -126,7 +126,6 @@ class Interface:
         self.updateStateImage("Moteur", self.states["Temp"])
 
     def updateStateValuesActionLoop(self, stateValues, hardware):
-        print(stateValues)
         if stateValues.heat_turn_on or stateValues.heat_pulse_on:
             self.states["Temp"] = True
         else:
