@@ -22,7 +22,7 @@ def main():
     q = Queue()
     config_file = setup()
     q = Queue()
-    t_1 = Thread(target=interface.runInterface, args=(config_file, q))
+    t_1 = Thread(target=interface.runInterface, args=(config_file, q, valuesSaver))
     t_2 = Thread(target=actionLoop, args=(q,))
     t_1.start()
     t_2.start()
@@ -41,9 +41,10 @@ def actionLoop(q):
         if (
             changements or timeCount > 60
         ):  # on met un timecount pour saver les etats courant une fois de temps en temps
-            print(interface.getValues())
-            valuesSaver.updateValues(interface.getValues())
-            logic.loadConfig(valuesSaver.getValues())
+            valeurInterface = interface.getValues()
+            if valeurInterface is not None:
+                valuesSaver.updateValues(valeurInterface)
+                logic.loadConfig(valuesSaver.getValues())
             # changements = False
             timeCount = 0
 

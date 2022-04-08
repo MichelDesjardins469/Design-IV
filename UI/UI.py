@@ -179,6 +179,7 @@ class Components:
                     [1, 2, 3, 4],
                     key=ComponentKeys.allKeys["Pompe"]["Zone"],
                     default_value=1,
+                    enable_events=True,
                 ),
                 sg.Checkbox(
                     "On/Off",

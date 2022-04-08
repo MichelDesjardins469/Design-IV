@@ -95,9 +95,6 @@ class Interface:
                 self.values[ComponentKeys.allKeys[componentKey]["Slider"]] + increment
             )
             self.window[ComponentKeys.allKeys[componentKey]["Slider"]].update(new_value)
-        if componentKey == "Pompe":
-            zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
-            self.values["FreqWater" + str(zone)] = new_value
 
     def getValues(self):
         return self.values
@@ -164,7 +161,7 @@ class Interface:
                 filename="UI/red_power_sign.png"
             )
 
-    def runInterface(self, config_file, q):
+    def runInterface(self, config_file, q, valuesSaver):
         self.event, self.values = self.window.read(timeout=500)
         self.setValues(config_file)
         time_count = 0
@@ -172,6 +169,10 @@ class Interface:
 
         while True:
             self.event, self.values = self.window.read(timeout=1)
+            zone = self.values[ComponentKeys.allKeys["Pompe"]["Zone"]]
+            self.values["FreqWater" + str(zone)] = self.values[
+                ComponentKeys.allKeys["Pompe"]["Slider"]
+            ]
             time_count += 1
             if self.co2_danger and time_count > 10000:
                 event, values = UI.CO2NiveauCritiquePopup()
@@ -210,6 +211,10 @@ class Interface:
             else:
                 if self.event != sg.TIMEOUT_KEY:
                     self.value_changed = True
+                if self.event == ComponentKeys.allKeys["Pompe"]["Zone"]:
+                    self.window[ComponentKeys.allKeys["Pompe"]["Slider"]].update(
+                        valuesSaver.getValues()["FreqWater" + str(zone)]
+                    )
                 if self.event == ComponentKeys.allKeys["Lumiere"]["TimerUsed"]:
                     self.controlTimers("Lumiere")
                 if self.event == ComponentKeys.allKeys["Lumiere"]["OnOffManual"]:
