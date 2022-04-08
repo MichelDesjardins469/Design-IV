@@ -1,4 +1,4 @@
-# from Control.hardwareAccess import HardwareAccess
+ from Control.hardwareAccess import HardwareAccess
 from Control.DummyHardwareAccess import DummyHardwareAccess
 import time
 from threading import Thread
@@ -9,9 +9,9 @@ from Utils.ValuesSaver import ValuesSaver
 from queue import Queue
 
 # copier le cotenu de config_test dans config.json
-# config_file = "Utils/config.json"
-config_file_path = "Utils/config_test.json"
-hardware = DummyHardwareAccess()
+ config_file = "/home/pi/Desktop/git/Design-IV/Utils/config.json"
+#config_file_path = "Utils/config_test.json"
+hardware = HardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file_path)
 components = Components()
