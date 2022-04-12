@@ -174,7 +174,9 @@ class Interface:
                 ComponentKeys.allKeys["Pompe"]["Slider"]
             ]
             time_count += 1
+
             self.window["CO2WarningText"].update(visible=self.co2_danger)
+
             if not q.empty():
                 readings = q.get()
                 q.task_done()

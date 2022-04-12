@@ -23,6 +23,8 @@ PIN_VALVE_4 = 18
 PWM_DURATION = 0.5
 BIAIS_TEMP = 2.0
 
+CONNECTION_ATTEMPTS = 20
+
 WATER_DURATION = 5
 
 LIST_PORTS = ["/dev/ttyACM0", "/dev/ttyACM1", "/dev/ttyACM2"]
@@ -100,15 +102,23 @@ class HardwareAccess:
 
     def setup_serials(self):
         for port in LIST_PORTS:
-            ser = serial.Serial(
-                port=port,
-                baudrate=9600,
-                parity=serial.PARITY_NONE,
-                stopbits=serial.STOPBITS_ONE,
-                bytesize=serial.EIGHTBITS,
-                timeout=10,
-            )
-            self.list_serials.append(ser)
+            connected = False
+            n_tries = 0
+            while not connected and n_tries < CONNECTION_ATTEMPTS:
+                try:
+                    ser = serial.Serial(
+                        port=port,
+                        baudrate=9600,
+                        parity=serial.PARITY_NONE,
+                        stopbits=serial.STOPBITS_ONE,
+                        bytesize=serial.EIGHTBITS,
+                        timeout=10,
+                    )
+                    connected = True
+                    self.list_serials.append(ser)
+                except serial.serialutil.SerialException:
+                    n_tries = n_tries + 1
+                    time.sleep(1)
 
     def setup_pwm(self):
         self.queue_pwm = Queue(maxsize=0)
@@ -311,39 +321,46 @@ class HardwareAccess:
 
         for t in threads:
             t.join()
+        
+        print(results_int)
+        print(result_ext)
+        
+        if not len(result_ext) == 1:
+            return None
 
-        # return complete_readings(
-        #    float(results_int[0][0]),
-        #    float(results_int[1][0]),
-        #    float(result_ext[0][0]),
-        #    float(results_int[0][1]),
-        #    float(results_int[1][1]),
-        #    float(result_ext[1]),
-        #    float(results_int[0][2]),
-        #    float(results_int[1][2]),
-        # )
         return complete_readings(
-            float(results_int[0][0]) - BIAIS_TEMP,
-            float(results_int[1][0]) - BIAIS_TEMP,
-            float(results_int[2][0]) - BIAIS_TEMP,
-            float(results_int[0][1]),
-            float(results_int[1][1]),
-            float(results_int[2][1]),
-            float(results_int[0][2]),
-            float(results_int[1][2]),
+           float(results_int[0][0]) - BIAIS_TEMP,
+           float(results_int[1][0]) - BIAIS_TEMP,
+           float(result_ext[0][0]) - BIAIS_TEMP,
+           float(results_int[0][1]),
+           float(results_int[1][1]),
+           float(result_ext[0][1]),
+           float(results_int[0][2]),
+           float(results_int[1][2]),
         )
+       # return complete_readings(
+       #     float(results_int[0][0]) - BIAIS_TEMP,
+       #     float(results_int[1][0]) - BIAIS_TEMP,
+       #     float(results_int[2][0]) - BIAIS_TEMP,
+       #     float(results_int[0][1]),
+       #     float(results_int[1][1]),
+       #     float(results_int[2][1]),
+       #     float(results_int[0][2]),
+       #     float(results_int[1][2]),
+       # )
 
     def contact_sensor(self, serial, output_int, output_ext):
         print("calling sensor one of sensors")
         serial.write(b"run\n")
         reading = serial.readline()
+        #print(reading)
         if reading == b"":
-            print("couldn't not contact one station")
+            print("couldn't contact one station")
             # results_int.append(None)
         else:
             splits = reading.decode("utf-8").split(":")
             # if splits[2] == -1:
-            if splits[2] == -100:
+            if splits[2] == "-1":
                 output_ext.append(splits)
             else:
                 self._key_lock.acquire()

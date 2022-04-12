@@ -77,7 +77,6 @@ def Slider2ButtonNoRange(
         ),
     ]
 
-
 def nouvelAppareilPopup():
     return [sg.OptionMenu(["Unité de chauffage", "Ventilateur", "Lumière"], s=(15, 2))]
 
