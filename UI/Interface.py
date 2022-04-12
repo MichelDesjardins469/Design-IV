@@ -154,11 +154,11 @@ class Interface:
     def updateStateImage(self, componentKey, state):
         if state:
             self.window[ComponentKeys.allKeys[componentKey]["StateImage"]].update(
-                filename="UI/green_power_sign.png"
+                filename="/home/pi/Desktop/git/Design-IV/UI/green_power_sign.png"
             )
         else:
             self.window[ComponentKeys.allKeys[componentKey]["StateImage"]].update(
-                filename="UI/red_power_sign.png"
+                filename="/home/pi/Desktop/git/Design-IV/UI/red_power_sign.png"
             )
 
     def runInterface(self, config_file, q, valuesSaver):
