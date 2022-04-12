@@ -109,8 +109,8 @@ class Interface:
             self.value_changed = False
         return value_changed_temp
 
-    def CO2NiveauCritiquePopup(self):
-        self.co2_danger = True
+    def CO2NiveauCritiquePopup(self, value):
+        self.co2_danger = value
 
     def updateRealTimeValues(self, dictValues):
         for key in dictValues._asdict():
@@ -174,10 +174,7 @@ class Interface:
                 ComponentKeys.allKeys["Pompe"]["Slider"]
             ]
             time_count += 1
-            if self.co2_danger and time_count > 10000:
-                event, values = UI.CO2NiveauCritiquePopup()
-                self.co2_danger = False
-                time_count = 0
+            self.window["CO2WarningText"].update(visible=self.co2_danger)
             if not q.empty():
                 readings = q.get()
                 q.task_done()

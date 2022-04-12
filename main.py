@@ -32,6 +32,8 @@ def main():
 
 def actionLoop(q):
     timeCount = 0
+
+    co2_level = 0
     while True:
         # ping_watchdog()
         if interface.window_down:
@@ -57,8 +59,9 @@ def actionLoop(q):
         # )
         co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
         if co2_level > valuesSaver.getValues()["SliderCO2"]:
-            interface.CO2NiveauCritiquePopup()
-            co2_level = 0
+            interface.CO2NiveauCritiquePopup(True)
+        else:
+            interface.CO2NiveauCritiquePopup(False)
         q.put(readings)
         q.join()
         actions = logic.logic_loop(readings)

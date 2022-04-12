@@ -78,17 +78,6 @@ def Slider2ButtonNoRange(
     ]
 
 
-def CO2NiveauCritiquePopup():
-    return sg.Window(
-        "Avertissement du CO2",
-        [
-            [sg.T("Niveau de CO2 critique!")],
-            [sg.B("OK", button_color="red", auto_size_button=True)],
-        ],
-        element_justification="c",
-    ).read(close=True)
-
-
 def nouvelAppareilPopup():
     return [sg.OptionMenu(["Unité de chauffage", "Ventilateur", "Lumière"], s=(15, 2))]
 
@@ -174,7 +163,7 @@ class Components:
         ]
         self.frame_hours_control_pompe = [
             [
-                sg.T("Choix de la zone a controlé :"),
+                sg.T("Choix de la zone à controler :"),
                 sg.Combo(
                     [1, 2, 3, 4],
                     key=ComponentKeys.allKeys["Pompe"]["Zone"],
@@ -301,6 +290,15 @@ class Components:
                 ),
             ],
             [sg.B("Minimiser"), sg.Cancel("Fermer")],
+            [
+                sg.T(
+                    "ATTENTION LE NIVEAU DE CO2 EST TROP ÉLEVÉ!",
+                    key="CO2WarningText",
+                    visible=False,
+                    font=("Helvetica bold", 20),
+                    text_color="red",
+                )
+            ],
         ]
 
     def __del__(self):
