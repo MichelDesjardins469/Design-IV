@@ -77,6 +77,7 @@ def Slider2ButtonNoRange(
         ),
     ]
 
+
 def nouvelAppareilPopup():
     return [sg.OptionMenu(["Unité de chauffage", "Ventilateur", "Lumière"], s=(15, 2))]
 
@@ -130,7 +131,7 @@ class Components:
     def __init__(self):
         self.frame_inputs_layout = [
             Slider2button(
-                "Température désirée (°C) ",
+                "Température (°C) ",
                 ComponentKeys.allKeys["Temp"]["Sub"],
                 ComponentKeys.allKeys["Temp"]["Slider"],
                 ComponentKeys.allKeys["Temp"]["Add"],
@@ -140,7 +141,7 @@ class Components:
                 20,
             ),
             Slider2button(
-                "Humidité désirée(%)",
+                "Humidité (%)",
                 ComponentKeys.allKeys["Humidity"]["Sub"],
                 ComponentKeys.allKeys["Humidity"]["Slider"],
                 ComponentKeys.allKeys["Humidity"]["Add"],
@@ -150,7 +151,7 @@ class Components:
                 80,
             ),
             Slider2button(
-                "Taux de CO2 désiré (ppm)",
+                "Taux de CO2 (ppm)",
                 ComponentKeys.allKeys["CO2"]["Sub"],
                 ComponentKeys.allKeys["CO2"]["Slider"],
                 ComponentKeys.allKeys["CO2"]["Add"],
@@ -177,7 +178,7 @@ class Components:
                 ),
             ],
             Slider2ButtonNoRange(
-                "Temps entre les arrosage(min)",
+                "Temps entre les arrosages(min)",
                 ComponentKeys.allKeys["Pompe"]["Sub"],
                 ComponentKeys.allKeys["Pompe"]["Slider"],
                 ComponentKeys.allKeys["Pompe"]["Add"],
@@ -249,7 +250,7 @@ class Components:
         self.layout = [
             [
                 sg.Frame(
-                    "Variables contrôlables",
+                    "Consignes de contrôles",
                     self.frame_inputs_layout,
                     title_color="white",
                     element_justification="r",

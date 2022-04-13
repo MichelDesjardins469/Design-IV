@@ -1,4 +1,4 @@
-from Control.hardwareAccess import HardwareAccess
+# from Control.hardwareAccess import HardwareAccess
 from Control.DummyHardwareAccess import DummyHardwareAccess
 import time
 from threading import Thread
@@ -10,7 +10,7 @@ from queue import Queue
 
 # copier le cotenu de config_test dans config.json
 config_file_path = "/home/pi/Desktop/git/Design-IV/Utils/config.json"
-#config_file_path = "Utils/config_test.json"
+# config_file_path = "Utils/config_test.json"
 hardware = HardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file_path)
@@ -19,7 +19,6 @@ interface = Interface(components)
 
 
 def main():
-    #time.sleep(15)
     q = Queue()
     config_file = setup()
     q = Queue()
@@ -33,8 +32,6 @@ def main():
 
 def actionLoop(q):
     timeCount = 0
-
-    co2_level = 0
     while True:
         # ping_watchdog()
         if interface.window_down:
@@ -51,16 +48,16 @@ def actionLoop(q):
             # changements = False
             timeCount = 0
 
-        #readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
+        # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         readings = hardware.get_lecture_sensors_threaded()
-        
+
         if not readings == None:
             co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
             if co2_level > valuesSaver.getValues()["SliderCO2"]:
                 interface.CO2NiveauCritiquePopup(True)
             else:
                 interface.CO2NiveauCritiquePopup(False)
-            
+
             q.put(readings)
             q.join()
             actions = logic.logic_loop(readings)
