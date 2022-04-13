@@ -121,7 +121,13 @@ class Interface:
         self.updateStateImage("Ventilateur", self.states["Ventilateur"])
         self.updateStateImage("Pompe", self.states["Pompe"])
         self.updateStateImage("Lumiere", self.states["Lumiere"])
-        self.updateStateImage("Moteur", self.states["Temp"])
+        self.updateStateImage("Moteur", self.states["Moteur"])
+        if self.states["Moteur"]:
+            self.window["MotorOffButton"].update(button_color="grey")
+            self.window["MotorOnButton"].update(button_color="green")
+        else:
+            self.window["MotorOffButton"].update(button_color="red")
+            self.window["MotorOnButton"].update(button_color="grey")
 
     def updateStateValuesActionLoop(self, stateValues, hardware):
         if stateValues.heat_turn_on or stateValues.heat_pulse_on:
