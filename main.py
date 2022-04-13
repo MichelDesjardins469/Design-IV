@@ -9,9 +9,9 @@ from Utils.ValuesSaver import ValuesSaver
 from queue import Queue
 
 # copier le cotenu de config_test dans config.json
-config_file_path = "/home/pi/Desktop/git/Design-IV/Utils/config.json"
+config_file_path = "Utils/config.json"
 # config_file_path = "Utils/config_test.json"
-hardware = HardwareAccess()
+hardware = DummyHardwareAccess()
 logic = None  # ControlLogic()
 valuesSaver = ValuesSaver(config_file_path)
 components = Components()
@@ -48,8 +48,8 @@ def actionLoop(q):
             # changements = False
             timeCount = 0
 
-        # readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
-        readings = hardware.get_lecture_sensors_threaded()
+        readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
+        # readings = hardware.get_lecture_sensors_threaded()
 
         if not readings == None:
             co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
