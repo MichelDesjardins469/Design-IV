@@ -99,19 +99,6 @@ def controleHeures(
             sg.Combo(
                 Combos.minutes, key=keyMinutesE, default_value=0, enable_events=True
             ),
-            sg.Checkbox(
-                "Ne pas considérer les minuteurs",
-                key=keyCheckBoxTimers,
-                default=False,
-                enable_events=True,
-            ),
-            sg.Checkbox(
-                "Off",
-                key=keyControlTimer,
-                default=False,
-                disabled=True,
-                enable_events=True,
-            ),
         ]
     ]
 
@@ -194,6 +181,12 @@ class Components:
                 sg.Combo(Combos.minutes, key="VoletsTempsOuverture", default_value=10),
             ],
             [
+                sg.Checkbox(
+                    "Contrôle manuel",
+                    key="MoteurControleManuel",
+                    default=False,
+                    enable_events=True,
+                ),
                 sg.Button("Ouvrir", key="MotorOnButton", button_color="grey"),
                 sg.B("Fermer", key="MotorOffButton", button_color="red"),
             ],
@@ -299,6 +292,7 @@ class Components:
                     text_color="red",
                 )
             ],
+            [sg.B("Minimiser")],
         ]
 
     def __del__(self):

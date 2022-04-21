@@ -126,7 +126,7 @@ class HardwareAccess:
         self.thread_pwm.setDaemon(True)
         self.thread_pwm.start()
 
-    def traitement_actions(self, actions):
+    def traitement_actions(self, actions, voletOuvertManuel):
         self.control_lights(actions.lights_turn_on)
 
         if actions.heat_pulse_on and not self.pulse_on:
@@ -141,10 +141,10 @@ class HardwareAccess:
         if actions.heat_turn_off:
             self.control_heat(False)
 
-        if actions.vent_turn_on:
+        if actions.vent_turn_on or voletOuvertManuel:
             self.control_fan(True)
             self.open_volets()
-        if actions.vent_turn_off:
+        if actions.vent_turn_off or not voletOuvertManuel:
             self.control_fan(False)
             self.close_volet()
 
@@ -321,39 +321,40 @@ class HardwareAccess:
 
         for t in threads:
             t.join()
-        
+
         print(results_int)
         print(result_ext)
-        
+
         if not len(result_ext) == 1:
             return None
 
         return complete_readings(
-           float(results_int[0][0]) - BIAIS_TEMP,
-           float(results_int[1][0]) - BIAIS_TEMP,
-           float(result_ext[0][0]) - BIAIS_TEMP,
-           float(results_int[0][1]),
-           float(results_int[1][1]),
-           float(result_ext[0][1]),
-           float(results_int[0][2]),
-           float(results_int[1][2]),
+            float(results_int[0][0]) - BIAIS_TEMP,
+            float(results_int[1][0]) - BIAIS_TEMP,
+            float(result_ext[0][0]) - BIAIS_TEMP,
+            float(results_int[0][1]),
+            float(results_int[1][1]),
+            float(result_ext[0][1]),
+            float(results_int[0][2]),
+            float(results_int[1][2]),
         )
-       # return complete_readings(
-       #     float(results_int[0][0]) - BIAIS_TEMP,
-       #     float(results_int[1][0]) - BIAIS_TEMP,
-       #     float(results_int[2][0]) - BIAIS_TEMP,
-       #     float(results_int[0][1]),
-       #     float(results_int[1][1]),
-       #     float(results_int[2][1]),
-       #     float(results_int[0][2]),
-       #     float(results_int[1][2]),
-       # )
+
+    # return complete_readings(
+    #     float(results_int[0][0]) - BIAIS_TEMP,
+    #     float(results_int[1][0]) - BIAIS_TEMP,
+    #     float(results_int[2][0]) - BIAIS_TEMP,
+    #     float(results_int[0][1]),
+    #     float(results_int[1][1]),
+    #     float(results_int[2][1]),
+    #     float(results_int[0][2]),
+    #     float(results_int[1][2]),
+    # )
 
     def contact_sensor(self, serial, output_int, output_ext):
         print("calling sensor one of sensors")
         serial.write(b"run\n")
         reading = serial.readline()
-        #print(reading)
+        # print(reading)
         if reading == b"":
             print("couldn't contact one station")
             # results_int.append(None)

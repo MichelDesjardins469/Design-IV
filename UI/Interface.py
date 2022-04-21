@@ -18,6 +18,7 @@ class Interface:
             "Pompe": False,
             "Ventilateur": False,
             "Lumiere": False,
+            "Moteur": False,
         }
         self.window = sg.Window(
             "Contrôle de la serre",
@@ -152,10 +153,11 @@ class Interface:
         else:
             self.states["Pompe"] = False
 
-        if hardware.volet_opened:
-            self.states["Moteur"] = True
-        else:
-            self.states["Moteur"] = False
+        if not self.values["MoteurControleManuel"]:
+            if hardware.volet_opened:
+                self.states["Moteur"] = True
+            else:
+                self.states["Moteur"] = False
 
     def updateStateImage(self, componentKey, state):
         if state:
@@ -224,13 +226,21 @@ class Interface:
                     self.controlTimers("Lumiere")
                 if self.event == ComponentKeys.allKeys["Lumiere"]["OnOffManual"]:
                     self.controlOnOffs("Lumiere")
+                if self.values["MoteurControleManuel"]:
+                    self.window["MotorOnButton"].update(disabled=False)
+                    self.window["MotorOffButton"].update(disabled=False)
+                else:
+                    self.window["MotorOnButton"].update(disabled=True)
+                    self.window["MotorOffButton"].update(disabled=True)
                 if self.event == "MotorOnButton":
                     self.window["MotorOnButton"].update(button_color="green")
                     self.window["MotorOffButton"].update(button_color="grey")
+                    self.states["Moteur"] = True
                     self.updateStateImage("Moteur", True)
                 if self.event == "MotorOffButton":
                     self.window["MotorOffButton"].update(button_color="red")
                     self.window["MotorOnButton"].update(button_color="grey")
+                    self.states["Moteur"] = False
                     self.updateStateImage("Moteur", False)
                 if self.event == ComponentKeys.allKeys["Pompe"]["Sub"]:
                     self.updateSlider("Pompe", False, 5)
@@ -249,4 +259,4 @@ class Interface:
                 if self.event == ComponentKeys.allKeys["Humidity"]["Add"]:
                     self.updateSlider("Humidity", True, 2)
                 if self.event == "Minimiser":
-                    self.window.Minimize()
+                    self.window.close()
