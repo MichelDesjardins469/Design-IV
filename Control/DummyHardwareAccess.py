@@ -65,7 +65,7 @@ class DummyHardwareAccess:
     def setup_serials(self):
         pass
 
-    def traitement_actions(self, actions):
+    def traitement_actions(self, actions, voletOuvertManuel):
         self.control_lights(actions.lights_turn_on)
 
         if actions.heat_pulse_on and not self.pulse_on:
@@ -80,7 +80,7 @@ class DummyHardwareAccess:
         if actions.heat_turn_off:
             self.control_heat(False)
 
-        if actions.vent_turn_on:
+        if actions.vent_turn_on or voletOuvertManuel:
             self.control_fan(True)
             self.open_volets()
         if actions.vent_turn_off:

@@ -50,7 +50,6 @@ def actionLoop(q):
 
         readings = hardware.get_lecture_sensors_test_simulated("test_winter_focus_temp")
         # readings = hardware.get_lecture_sensors_threaded()
-
         if not readings == None:
             co2_level = round((readings.CO2_int_1 + readings.CO2_int_2) / 2, 2)
             if co2_level > valuesSaver.getValues()["SliderCO2"]:
@@ -68,7 +67,7 @@ def actionLoop(q):
                 "NextWater4": logic.next_water_4.strftime("%d/%m/%Y %H:%M"),
             }
             valuesSaver.updateValues(waterReadings)
-            hardware.traitement_actions(actions)
+            hardware.traitement_actions(actions, interface.states["Moteur"])
             interface.updateStateValuesActionLoop(actions, hardware)
         time.sleep(0.5)
 
